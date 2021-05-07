@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../../main__style.scss"
+    ],
+    "names": [],
+    "file": "main__style.min.css"
+}
