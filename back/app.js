@@ -3,6 +3,8 @@ const app = express();
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/user');
+const testRoutes = require('./routes/test');
+const messageRoutes = require('./routes/messages');
 dotenv.config();
 
 app.use(express.json());
@@ -15,5 +17,6 @@ app.use((req, res, next) => {
   });
 
 app.use('/', userRoutes);
+app.use('/messages/', messageRoutes);
 
 module.exports = app;

@@ -1,8 +1,9 @@
 const express = require('express');
-const mysql = require('mysql');
+ const mysql = require('mysql');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 dotenv.config();
  
 const db = mysql.createConnection({
@@ -10,7 +11,7 @@ const db = mysql.createConnection({
     host:'localhost',
     password:process.env.DBPASSWORD,
     database:'gm__db'
-})
+});
 
 const alphaNumValidation = (field) => {
     if(field.length >= 3 && field.length <= 30 && /^[A-Za-zÀ-ÖØ-öø-ÿ0-9- ]*$/.test(field) === true){
@@ -31,7 +32,7 @@ exports.createUser = async (req, res, next) => {
         const hash = await bcrypt.hash(password, salt);
         if(!hash){console.log('smth went wrong')};
         if(alphaNumValidation(firstName) && alphaNumValidation(lastName) && emailValidation(email)){
-            db.query(`INSERT INTO usermodel (firstName, lastName, email, position, password) VALUES (?, ?, ?, ?, ?)`, 
+            db.query(`INSERT INTO users (firstName, lastName, email, position, password) VALUES (?, ?, ?, ?, ?)`, 
             [firstName, lastName, email, position, hash],
             (error, result) => {
                 if(error){res.status(400).send(error.errno + '__' + error.sqlMessage)}
@@ -49,7 +50,7 @@ exports.loginUser = (req, res, next) => {
     try{
         const {email, password} = req.body;
         if(email.length >= 1 && password.length >=1 && emailValidation(email)){
-            const user = db.query(`SELECT * FROM usermodel WHERE email IN (?)`,
+            const user = db.query(`SELECT * FROM users WHERE email IN (?)`,
             email,
             async (error, result) => {
                 if (error) { console.log('Smth went wrong when querying DB ' + error); }
@@ -79,5 +80,14 @@ exports.loginUser = (req, res, next) => {
         
     }catch(error){
         res.status(500).send('somth went wrong when login :s ' + error);
+    }
+}
+
+exports.validSession = (req, res, next) => {
+    //tool for auth debug;
+    if(res){
+        res.status(200).send('it\'s all good');
+    }else{
+        res.status(404).send('nothing for you mate');
     }
 }

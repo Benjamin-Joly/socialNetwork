@@ -7,7 +7,6 @@ body{
     display:flex;
     justify-content: center;
     align-items: center;
-    height:100vh;
 }
 
 #auth-section{
@@ -45,4 +44,9 @@ label{
     font-size:1.2em;
     font-weight:900;
     cursor:pointer;
+}
+
+#message-body{
+    height:4em;
+    border-radius:8px;
 }
