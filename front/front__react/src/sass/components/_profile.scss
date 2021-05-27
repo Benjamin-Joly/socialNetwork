@@ -1,0 +1,123 @@
+#profile__menu{
+    position: fixed;
+    right:0;
+    top:0;
+    z-index:10;
+}
+
+.profile{
+        &__pic{
+            background: black;
+            width:150px;
+            height:150px;
+            border-bottom-left-radius: 100%;
+        }
+        &__btn{
+            background:#7c7c7c;
+            border-radius:50%;
+            width:50px;
+            height:50px;
+            position:absolute;
+            box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            cursor:pointer;
+            &:nth-child(2){
+                right:120px;
+                top:10px;
+            }
+        }
+        &__text{
+            font-family: $fontFamily;
+            font-weight: 800;
+            font-size:1.5em;
+        }
+}
+
+.log-out{
+    right:80px;
+    top:80px;
+}
+
+.settings{
+    height:100%;
+    width:100%;
+    margin:auto;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &__menu{
+        background:#191919;
+        position:fixed;
+        top:0;left:0;right:0;bottom:0;
+    }
+    &__box{
+        position:fixed;
+        top:50%;left:50%;
+        transform: translate(-45%, -50%);
+        background:white;
+        width:80%;
+        max-width:1200px;
+        max-height:800px;
+        padding:1em;
+        border-radius:16px;
+        overflow:hidden;
+    }
+    &__wrap{
+        //margin:2em;
+        display:flex;
+        justify-content: space-between;
+        width:90%;
+        margin:auto;
+        & .img__container{
+            height:300px;
+            width:300px;
+            border-radius: 50%;
+            background: #191919;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+        & .typo{
+            display:flex;
+            flex-direction: column; 
+        }
+    }
+    &__cta{
+        align-self: flex-end;
+        margin-top:3em;
+    }
+    &__close-bar{
+        background:black;
+        height:36px;
+        margin:-1em -1em 0 -1em;
+        display:flex;
+        align-items: center;
+        position:relative;
+            & .close__btn{
+                position: absolute;
+                right:1em;
+                background:white;
+                width:20px;
+                height:20px;
+                border-radius: 50%;
+                display:flex;
+                align-items:center;
+                justify-content: center;
+                flex-direction: column;
+                cursor:pointer;
+                    & div{
+                        border-top:solid black 2px;
+                        width:16px;
+                        transform-origin: center;
+                        &:nth-child(1){
+                            transform: translateY(1px) rotate(45deg);
+                        }
+                        &:nth-child(2){
+                            transform: translateY(-1px) rotate(-45deg);
+                        }
+                    }
+            }
+    }
+}

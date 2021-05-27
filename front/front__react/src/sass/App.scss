@@ -1,0 +1,55 @@
+@import url("https://api.fontshare.com/css?f[]=chillax@1&display=swap");
+@import './utils';
+@import './components/header';
+@import './components/connection-gate';
+@import './components/message';
+@import './components/text-area';
+@import './components/profile';
+
+body, html{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    background:#ECECEC;
+    font-family: $fontFamily;
+}
+
+body{
+    margin-left:108px;
+
+}
+
+.content__wrap{
+    width:100%;
+    height:100vh;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+hr{
+    color:#191919;
+    min-width: 100%;
+    margin: 1em auto 3em auto;
+}
+
+.cta{
+    background:black;
+    border: none;
+    border-radius: 8px;
+    padding:.6em;
+    color:white;
+    font-family: $fontFamily;
+    font-size:1.2em;
+    font-weight: 400;
+    cursor: pointer;
+        &__gate{
+            align-self:flex-end;
+            justify-self: flex-end;
+            margin-top:3em;
+        }
+}
+
+.disabled {
+    display: none;
+}

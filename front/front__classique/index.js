@@ -101,13 +101,58 @@ const getReq = async () => {
      if(!data){
          console.log('no data recieved');
      }
+     mapData(data);
  }
 
+const mapData = (array) => {
+    const messagesContainer = document.createElement('section');
+    messagesContainer.classList.add('messages__container');
+    const body = document.querySelector('body');
+    const messages = array.map(x => {
+        const {messageId, messageBody, messageAuthor, reactions, response, isUp, imgUrl, messageDate} = x;
+        console.log(messageId, messageBody, messageAuthor);
+        return (`
+        <section id="message__${messageId}" class="message__container">
+            <div class="message__wrap">
+                <p class="message__body">${messageBody}</p>
+                <p class="message__author">${messageAuthor}</p>
+                <p class="message__date">${messageDate}</p>
+            </div>
+            <div class="message__modify">
+                <button id="modify__${messageId}" class="cta update__message" value="${messageId}" data-author="${messageAuthor}">update</button>
+                <button id="delete__${messageId}" class="cta delete__message" value="${messageId}" data-author="${messageAuthor}">delete</button>
+            </div>
+        </section>
+        `)
+    });
+    messagesContainer.innerHTML = '<h3 class="messages__container--heading">Messages</h3>' + messages.join(``);
+    body.appendChild(messagesContainer);
+}
+
 validBtn.forEach((button) => {
+    console.log(button);
     button.addEventListener('click', (e) => {
-       getReq();    
+       fireDeleteReq();
     })
 });
+
+const fireDeleteReq = async () => {
+    const getData = await getReq();
+    const deleteBtns = Array.from(document.querySelectorAll('.delete__message'));
+    const updateBtns = Array.from(document.querySelectorAll('.update__message'));
+    deleteBtns.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            deleteReq(button);
+        });
+    });
+    updateBtns.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            putReq(button);
+        });
+    });
+}
 
 const postReq = async () => {
     const messageInputs = Array.from(document.querySelectorAll('.message__input'));
@@ -149,4 +194,50 @@ logOutBtn.addEventListener('click', (e) => {
     e.preventDefault();
     sessionStorage.clear();
     document.location.reload();
-})
+}); 
+
+const deleteReq = async (button) => {
+    console.log(button.value);
+    console.log(button.dataAuthor);
+    const token = sessionStorage.session;
+    const myHeader = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+     const deleteOpt = {
+        method:'DELETE',
+        headers: myHeader,
+        body: JSON.stringify({
+            'messageId' : button.value,
+            'messageAuthor' : button.dataset.author
+        })
+     }
+     const response = await fetch('http://localhost:3000/messages', deleteOpt);
+     const data = await response.text();
+     console.log(data);
+}
+
+const putReq = async (button) => {
+    console.log(button.value);
+    console.log(button.dataset.author);
+    const token = sessionStorage.session;
+    const myHeader = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+     const deleteOpt = {
+        method:'PUT',
+        headers: myHeader,
+        body: JSON.stringify({
+            'messageId' : button.value,
+            'messageAuthor' : button.dataset.author
+        })
+     }
+     const response = await fetch('http://localhost:3000/messages', deleteOpt);
+     const data = await response.text();
+     console.log(data);
+}
+
+

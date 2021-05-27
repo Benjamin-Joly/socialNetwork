@@ -1,0 +1,40 @@
+#text-area{
+    position:fixed;
+    bottom:2em;
+    left:50%;
+    transform: translateX(-45%);
+    background:rgb(63, 63, 63);
+    padding:1em;
+    border-radius:16px;
+}
+#post-message{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+}
+.message__text-area{
+    width:100%;
+    max-width:1300px;
+    min-width:600px;
+    max-height:200px;
+    resize:none;
+    font-family:$fontFamily;
+    font-size:1.2em;
+    font-weight:500;
+    margin:1em;
+    border-radius: 8px;
+}
+
+.update__input-wrap{
+    position:fixed;
+    z-index:2;
+    bottom:2em;
+    left:50%;
+    transform: translateX(-45%);
+    background:rgb(240, 23, 23);
+    padding:2em;
+    border-radius:16px;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+}

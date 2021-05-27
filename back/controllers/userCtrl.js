@@ -35,8 +35,8 @@ exports.createUser = async (req, res, next) => {
             db.query(`INSERT INTO users (firstName, lastName, email, position, password) VALUES (?, ?, ?, ?, ?)`, 
             [firstName, lastName, email, position, hash],
             (error, result) => {
-                if(error){res.status(400).send(error.errno + '__' + error.sqlMessage)}
-                else{res.status(200).send('Values inserted')}
+                if(error){res.status(400).send(error.errno + '--' + error.sqlMessage)}
+                else{res.status(200).send('logIN' + '__' + email + '__' + hash)}
             });
          } else{
              res.status(400).send('unvalid field');
@@ -47,7 +47,7 @@ exports.createUser = async (req, res, next) => {
 };
 
 exports.loginUser = (req, res, next) => {
-    try{
+    try{ 
         const {email, password} = req.body;
         if(email.length >= 1 && password.length >=1 && emailValidation(email)){
             const user = db.query(`SELECT * FROM users WHERE email IN (?)`,
@@ -57,20 +57,30 @@ exports.loginUser = (req, res, next) => {
 
                 const userLogs = result[0];
 
-                if (!userLogs) { res.status(404).send('no user with that name :('); }
+                if (!userLogs) { res.status(404).send('wrong ID mate, check your papers'); }
                 else {
                     const validLogs = await bcrypt.compare(password, userLogs.password);
                     if (!validLogs) { 
-                        res.status(401).send('no can do baby doll'); 
+                        res.status(401).send('wrong ID mate, check your papers'); 
                     }else{
                         const userId = userLogs.userId;
                         const token = jwt.sign(
-                            { userId: userId },
+                            {userId: userId,
+                            username : userLogs.firstName + ' ' + userLogs.lastName,
+                            position : userLogs.position
+                            },
                             process.env.TOKENSECRET,
                             { expiresIn: '2h' }
                         )
                         //res.header('Authorization', token).json({userId, token}).status(200).send('match !');
-                        res.status(200).header('Authorization', token).send('match' + '__' + userId + '__' + token);
+                        res.status(200).header('Authorization', token).send({
+                           session : token,
+                           user : {                           
+                                userId : userId,
+                                username: userLogs.firstName + ' ' + userLogs.lastName,
+                                position: userLogs.position
+                            }
+                        });
                     }       
                 }
             });
@@ -86,8 +96,28 @@ exports.loginUser = (req, res, next) => {
 exports.validSession = (req, res, next) => {
     //tool for auth debug;
     if(res){
-        res.status(200).send('it\'s all good');
+        res.status(200).send(true);
+        next();
     }else{
         res.status(404).send('nothing for you mate');
     }
+}
+
+
+exports.getOneUser = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+        const userId = decodedToken.userId;
+            const user = db.query(`SELECT * FROM users WHERE userId IN (?)`,
+            userId,
+            (err, result) => {
+                if (err) { console.log('Smth went wrong when querying DB ' + error); }
+                    const userDatas = result[0];
+                    const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                    res.status(200).send([userId, firstName, lastName, email, position, description]);
+            });
+      } catch {
+        res.status(401).send('Access denied, login to continue');
+      }
 }
