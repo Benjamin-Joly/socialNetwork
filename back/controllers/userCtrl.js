@@ -35,14 +35,26 @@ exports.createUser = async (req, res, next) => {
             db.query(`INSERT INTO users (firstName, lastName, email, position, password) VALUES (?, ?, ?, ?, ?)`, 
             [firstName, lastName, email, position, hash],
             (error, result) => {
-                if(error){res.status(400).send(error.errno + '--' + error.sqlMessage)}
-                else{res.status(200).send('logIN' + '__' + email + '__' + hash)}
+                if(error){res.status(400).send({
+                   message : error.errno + '--' + error.sqlMessage,
+                   valid : false
+                })}
+                else{res.status(200).send({
+                    message : `user ${firstName+' '+lastName} correctly created`,
+                    valid : true
+                })}
             });
          } else{
-             res.status(400).send('unvalid field');
+             res.status(400).send({
+                message : 'Unvalid entry, make sure your email is correct and don\'t use any reserved characters',
+                valid : false
+            });
          }
     }catch(error){
-        res.status(500).send('smth went wrong when signup ' + error)
+        res.status(500).send({
+            message : 'smth went wrong when signup ' + error,
+            valid : false
+        })
     }   
 };
 
@@ -57,11 +69,17 @@ exports.loginUser = (req, res, next) => {
 
                 const userLogs = result[0];
 
-                if (!userLogs) { res.status(404).send('wrong ID mate, check your papers'); }
-                else {
+                if (!userLogs) { res.status(404).send({
+                    message : 'wrong ID mate, check your papers',
+                    valid : false
+                }); 
+                } else {
                     const validLogs = await bcrypt.compare(password, userLogs.password);
                     if (!validLogs) { 
-                        res.status(401).send('wrong ID mate, check your papers'); 
+                        res.status(401).header('response', false).send({
+                            message : 'wrong ID mate, check your papers',
+                            valid : false
+                        }); 
                     }else{
                         const userId = userLogs.userId;
                         const token = jwt.sign(
@@ -72,24 +90,30 @@ exports.loginUser = (req, res, next) => {
                             process.env.TOKENSECRET,
                             { expiresIn: '2h' }
                         )
-                        //res.header('Authorization', token).json({userId, token}).status(200).send('match !');
                         res.status(200).header('Authorization', token).send({
                            session : token,
                            user : {                           
                                 userId : userId,
                                 username: userLogs.firstName + ' ' + userLogs.lastName,
                                 position: userLogs.position
-                            }
+                            },
+                            valid : true
                         });
                     }       
                 }
             });
         }else{
-            res.status(400).send('fields must be correctly filled');
+            res.status(400).send({
+                message : 'fields must be correctly filled',
+                valid : false
+            });
         }
         
     }catch(error){
-        res.status(500).send('somth went wrong when login :s ' + error);
+        res.status(500).send({
+            message : 'somth went wrong when login :s ' + error,
+            valid : false
+        });
     }
 }
 
