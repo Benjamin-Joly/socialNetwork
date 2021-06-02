@@ -1,10 +1,12 @@
-@import url("https://api.fontshare.com/css?f[]=chillax@1&display=swap");
+@import url("https://api.fontshare.com/css?f[]=hoover@1&f[]=cabinet-grotesk@1&display=swap");
 @import './utils';
 @import './components/header';
 @import './components/connection-gate';
 @import './components/message';
 @import './components/text-area';
 @import './components/profile';
+@import './components/gif';
+@import './components/cta';
 
 body, html{
     margin:0;
@@ -16,12 +18,14 @@ body, html{
 
 body{
     margin-left:108px;
-
+    @media(max-width:1000px){
+        margin:0;
+    }
 }
 
 .content__wrap{
     width:100%;
-    height:100vh;
+    height:100%;
     display:flex;
     align-items: center;
     justify-content: center;

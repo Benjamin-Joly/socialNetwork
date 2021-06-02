@@ -25,7 +25,6 @@ const signupReq = async (user) => {
         }
         return noCanDo;
     }
-    return data;
 };
 
 export default signupReq;

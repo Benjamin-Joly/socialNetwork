@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { useState } from 'react';
 
 //Components
 import IndexPage from './Pages/IndexPage';
@@ -10,13 +9,6 @@ import ChatRoomPage from './Pages/ChatRoomPage';
 
 
 function App() {
-  const [isAuth, setAuth] = useState(false);
-  const logIn = () => {
-    setAuth(true);
-  };
-  const signUp = () => {
-    setAuth(false);
-  }
   return (
     <div className="App">
       <BrowserRouter>

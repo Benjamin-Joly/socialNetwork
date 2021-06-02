@@ -7,7 +7,10 @@
         border-radius:16px;
         margin:1em 0 1em 0;
         box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
-        width:600px;
+        max-width:600px;
+        @media(max-width:1000px){
+            width:100%;
+        }
     }
     &__feed{
         height:100%;
@@ -28,11 +31,17 @@
     &__theirs{
         background: #E9E9E9;
         margin-right:25em;
+        @media(max-width:1000px){
+            margin:1em;
+        }
     }
     &__mine{
         background: #191919;
         color: #E9E9E9;
         margin-right:-25em;
+        @media(max-width:1000px){
+            margin:1em;
+        }
     }
 }
 
@@ -46,11 +55,28 @@
     }
 };
 
-.update__btn{
-    font-weight:400;
-    cursor:pointer;
-    margin:1em;
-        &:hover{
-            text-decoration: underline;
-        }
+.update{
+    &__wrap{
+        display:flex;
+        align-items:center;
+    }
+    &__link{
+        font-weight:400;
+        cursor:pointer;
+        margin:1em;
+        user-select: none;
+            &:hover{
+                text-decoration: underline;
+            }
+    }
+    &__input{
+        width:100%;
+        border-radius:16px;
+        border:none;
+        height:1.8em;
+        padding:0.5em;
+    }
+    &__btn{
+        justify-self: flex-end;
+    }
 }

@@ -79,6 +79,31 @@ const io = require('socket.io')(server, {
     })
   })
 
+  //Gif event
+
+  io.on('connection', (socket) => {
+    socket.on('newGif', (gif) => {
+      const { messageBody, userId, username, position, messageGifId, gifUrl } = gif;
+      console.log(messageBody, userId, username, position, messageGifId, gifUrl);
+      let date = Date();
+      date = date.toString();
+      const isUp = false;
+      db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, messageGifId, gifUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
+      [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl],
+      (error, result) => {
+          if(error){socket.send(error)}
+          console.log(result);
+      db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
+      (error, result) => {
+        if(error){console.log(error)}
+        else{
+          io.send(result);
+        }
+      });
+    });
+    })
+  })
+
 //delete event
 io.on('connection', (socket) => {
   socket.on('delete', (message) => {
@@ -98,11 +123,11 @@ io.on('connection', (socket) => {
 })
 
 //Update event
-
 io.on('connection', (socket) => {
   socket.on('update', (message) => {
     console.log('update ', message);
-    const messBody = 'test update';
+    const messBody = message.messageBody;
+    console.log(messBody);
     const messId = message.btnId;
     db.query(`UPDATE messages SET messageBody = "${messBody}" WHERE messageId = ${messId}`,
         (error, result) => {

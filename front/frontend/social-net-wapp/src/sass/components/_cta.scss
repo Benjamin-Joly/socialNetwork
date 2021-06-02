@@ -1,0 +1,84 @@
+#pic{
+    &__send{
+        fill : $lightColor;
+    }
+    &__account{
+        width:2.5em;
+        fill:$lightColor;
+    }
+    &__exit{
+        width:2.5em;
+        stroke:$lightColor;
+    }
+}
+
+.cta{
+    background:black;
+    border: none;
+    border-radius: 8px;
+    padding:.6em;
+    color:white;
+    font-family: $fontFamily;
+    font-size:1.2em;
+    font-weight: 400;
+    cursor: pointer;
+        &__gate{
+            align-self:flex-end;
+            justify-self: flex-end;
+            margin-top:3em;
+        }
+        &__message{
+            position:absolute;
+            top:.5em;right:-2em;
+            background: $constrastColor;
+            border:none;
+            border-radius:50%;
+            width:60px;height:60px;
+            cursor: pointer;
+            @media(min-width: 1000px) {
+                right:0;
+                top:1.2em;
+            }
+        }
+        &__gif{
+            position:absolute;
+            right:3em;top:3em;
+            background:$medColor;
+            border-radius:50%;
+            width:36px;height:36px;
+            border:none;
+            font-family: $titleFont;
+            font-size:1.2em;
+            font-weight:900;
+            transition : all .3s ease-in-out;
+            cursor:pointer;
+                @media(max-width: 1000px) {
+                    right:0;
+                    top:3.5em;
+                }
+        }
+        &__profile{
+            background:$constrastColor;
+            border-radius:50%;
+            width:50px;
+            height:50px;
+            position:absolute;
+            box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            cursor:pointer;
+                &:nth-child(2){
+                    right:120px;
+                    top:20px;
+                }
+                @media(max-width: 1000px) {
+                    right:1em;
+                    top:3em;
+                    &:nth-child(2){
+                        right:50px;
+                        top:10px;
+                    }
+                }
+        }
+}
