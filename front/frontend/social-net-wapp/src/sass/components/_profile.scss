@@ -23,6 +23,81 @@
         }
 }
 
+.user{
+    &__wrap{
+        margin:1em;
+        padding:1em;
+        background:$lightColor;
+        box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
+        border-radius: 16px;
+        max-height:100%;
+    }
+    &__infos{
+        position:relative;
+        margin:1em;
+        padding:1em;
+        background:$constrastColor;
+        border-radius: 16px;
+        display:grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+    &__name{
+        color:$lightColor;
+        font-size:1.2em;
+        font-weight:600;
+    }
+    &__email{
+        color:$lightColor;
+        font-size:1.2em;
+        font-weight:400;
+        cursor:pointer;
+    }
+    &__position{
+        color:$lightColor;
+        font-size:1.2em;
+        font-weight:600;
+    }
+    &__heading{
+        font-weight: 800;
+        color:$constrastColor;
+        margin-left:1em;
+    }
+    &__photo{
+        width:300px;
+        height:300px;
+        background:$constrastColor;
+        border-radius: 50%;
+    }
+    &__input-wrap{
+        margin:1em;
+        grid-row: 1/4;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+    }
+    &__input{
+        margin-top:1.5em;
+        border-radius:16px;
+        border:none;
+        height:1.4em;
+    }
+    &__photo-wrap{
+        display:flex;
+        flex-direction:column;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.dashboard__wrap{
+    display:flex;
+    justify-content: space-around;
+    align-content: center;
+    height:100%;
+    margin-top:10em;
+}
+
 .log-out{
     right:80px;
     top:80px;

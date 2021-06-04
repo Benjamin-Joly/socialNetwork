@@ -1,9 +1,4 @@
-const checkSession = async () => {
-    const token = sessionStorage.getItem('session');
-    if(!token || token === 'undefined'){
-        console.log('invalid session');
-        sessionStorage.clear();
-    }else{
+const checkSession = async (token) => {   
         const myHeader = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -15,11 +10,13 @@ const checkSession = async () => {
          }
          const response = await fetch('http://localhost:3000/valid', postOpt);
          const data = await response.json();
+         console.log(data);
          if(data === true){
              console.log('ok');
              return true;
+         }else{
+             return false;
          }
-    }
 }
 
-export default checkSession();
+export default checkSession;

@@ -8,12 +8,19 @@
 @import './components/gif';
 @import './components/cta';
 
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
 body, html{
     margin:0;
     padding:0;
     box-sizing: border-box;
     background:#ECECEC;
     font-family: $fontFamily;
+    font-smooth:always;
+
 }
 
 body{
@@ -37,22 +44,6 @@ hr{
     margin: 1em auto 3em auto;
 }
 
-.cta{
-    background:black;
-    border: none;
-    border-radius: 8px;
-    padding:.6em;
-    color:white;
-    font-family: $fontFamily;
-    font-size:1.2em;
-    font-weight: 400;
-    cursor: pointer;
-        &__gate{
-            align-self:flex-end;
-            justify-self: flex-end;
-            margin-top:3em;
-        }
-}
 
 .disabled {
     display: none;

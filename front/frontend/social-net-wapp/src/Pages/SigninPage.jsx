@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import loginReq from '../utils/login';
+import { useContext } from 'react';
+import { AuthCtx } from '../Contexts/AuthCtx';
+import { UserCtx } from '../Contexts/UserCtx';
 
 const SigninPage = (props) => {
+    const { isAuth, setAuth } = useContext(AuthCtx);
+    const { userDatas, setUserDatas } = useContext(UserCtx);
+    console.log(userDatas);
 
     const [err, setErr] = useState('');
 
@@ -15,14 +21,30 @@ const SigninPage = (props) => {
         };
         const response = await loginReq(user);
         if(response.valid === true){
+            console.log('response');
             sessionStorage.setItem('session', response.session);
-            const { userId, username, position } = response.user;
-            sessionStorage.setItem('user', userId+ ' ' + username + ' '+position);
-            props.history.push('/chat')
-        }else{
+            const { userId, username, email, position, description, imgUrl } = response.user;
+            sessionStorage.setItem('user', userId+ ' ' + username + ' '+ email + ' '+ position + ' '+ description + ' '+ imgUrl);
+            setAuth(true);
+            console.log(isAuth);
+            const user = {
+                userId : userId,
+                username : username,
+                email : email,
+                position : position,
+                description :description,
+                imgUrl : imgUrl
+            };
+            setUserDatas(user);
+        } else {
             setErr(response.message);
         }
+    };
+
+    if(isAuth === true){
+    props.history.push('/');
     }
+
     const goTo = () => {
         props.history.push('/register');
     };

@@ -121,7 +121,7 @@ const TextInput = (props) => {
                                 <input className='gif-search__input' type="text" ref={searchRef} onInput={getSomeGif} placeholder='Search your Gif here' />
                     </div>
                         {gifs.map((gif) => (
-                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullSize={gif.media[0].gif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
+                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullSize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
                         ))}
                         <div className="gif-more">
                             <button className='cta gif-more__btn disabled' onClick={getNextGifs}>Plus</button>

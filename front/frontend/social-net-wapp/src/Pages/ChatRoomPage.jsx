@@ -1,70 +1,63 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ioClient from 'socket.io-client';
 import Profile from '../Components/Profile';
 import TextInput from '../Components/TextInput';
 import Messages from '../Components/Messages';
+import Header from '../Components/Header';
+import { AuthCtx } from '../Contexts/AuthCtx';
+import { UserCtx } from '../Contexts/UserCtx';
+
 
 const ChatroomPage = (props) => {
+    console.log(props.history);
     const [ messages, setMessages ] = useState([]);
-
-    const token = sessionStorage.getItem('session');
-    const  userDatas  = () => {
-        const user = sessionStorage.getItem('user');
-        if(user){
-            const userDatas = user.split(' ');
-            return userDatas;
-        }
-        else{
-            props.history.push('/login');
-        }
-    }
-    const testData = userDatas();
-    if(!testData){
-        props.history.push('/login');
-    }
-    const [ userId, firstName, lastName, position ] = userDatas();
-    if(!token){
-        props.history.push('/login');
-    }
-    const socket = ioClient('http://localhost:3000', {
-        query : {
-            user :  firstName + ' ' + lastName,
-            userId : userId
-        },
-        auth : {
-            token : sessionStorage.getItem('session')
-        },
-        forceNew : true
-    });
-
-    useEffect(() => {
-        socket.on('message', data => {
-            console.log(data);
-            setMessages([...data]);
-        });
-        socket.on('notAllowed', data => {
-            console.log(data);
-        });
-        socket.on('disconnect', () => {
-            props.history.push('/login');
-        });
-        socket.emit('joinRoom', {
-            message : 'welcome message'
-        });
-        socket.on('newMessage', message => {
-            console.log('new');
-            setMessages(message);
-        });
-        return () => {
-            socket.emit('leaveRoom', {
-                message : 'Byebye message'
-            });
-        }
+    const { isAuth, setAuth } = useContext(AuthCtx);
+    const { userDatas, setUserDatas } = useContext(UserCtx);
+    console.log(userDatas);
+  
+    useEffect(() => {     
+            if(userDatas){
+                const { userId, username, email, position, description, imgUrl } = userDatas;
+    console.log(userId, username, email, position, description, imgUrl);
+                const socket = ioClient('http://localhost:3000', {
+                    query : {
+                        user :  username,
+                        userId : userId
+                    },
+                    auth : {
+                        token : sessionStorage.getItem('session')
+                    },
+                    forceNew : true
+                });
+                socket.on('message', data => {
+                    console.log(data);
+                    setMessages([...data]);
+                });
+                socket.on('notAllowed', data => {
+                    console.log(data);
+                });
+                socket.on('disconnect', () => {
+                    props.history.push('/login');
+                });
+                socket.emit('joinRoom', {
+                    message : 'welcome message'
+                });
+                socket.on('newMessage', message => {
+                    console.log('new');
+                    setMessages(message);
+                });
+                return () => {
+                    socket.emit('leaveRoom', {
+                        message : 'Byebye message'
+                    });
+                }
+            }else{
+                console.log('no tokenito');
+            }
     }, []);
-
-
     return(
         <div className="chatroom__wrap">
+            <Header history={props.history} />
             <Profile history={props.history} />
             <Messages content={ messages } history={props.history} />
             <TextInput />

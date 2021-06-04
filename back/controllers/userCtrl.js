@@ -85,17 +85,22 @@ exports.loginUser = (req, res, next) => {
                         const token = jwt.sign(
                             {userId: userId,
                             username : userLogs.firstName + ' ' + userLogs.lastName,
-                            position : userLogs.position
+                            position : userLogs.position,
+                            valid : true
                             },
                             process.env.TOKENSECRET,
                             { expiresIn: '2h' }
-                        )
+                        );
+                        console.log(token);
                         res.status(200).header('Authorization', token).send({
                            session : token,
                            user : {                           
                                 userId : userId,
                                 username: userLogs.firstName + ' ' + userLogs.lastName,
-                                position: userLogs.position
+                                email : userLogs.email,
+                                position: userLogs.position,
+                                description : userLogs.description,
+                                imgUrl : userLogs.imgUrl
                             },
                             valid : true
                         });
@@ -121,6 +126,7 @@ exports.validSession = (req, res, next) => {
     //tool for auth debug;
     if(res){
         res.status(200).send(true);
+        //console.log('my req ', req);
         next();
     }else{
         res.status(404).send('nothing for you mate');

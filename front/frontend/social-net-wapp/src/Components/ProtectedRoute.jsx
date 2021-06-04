@@ -1,13 +1,14 @@
 import { Redirect, Route } from 'react-router-dom';
-import Exit from './Exit';
+
 
 const ProtectedRoute = ({ component : Component, ...other}) => {
-    //const [isAuth, setAuth] = useState(true);
-    const isAuth = sessionStorage.getItem('session');
-    console.log('this', isAuth);
+    const isAuthenticated = sessionStorage.getItem("session");
+    const isToken = JSON.parse(isAuthenticated)?.login;
+    console.log(isToken);
     return (
+        // isAuthenticated ||  isToken ? <Component /> : <Redirect to={{ pathname: "/login" }} />
         <Route {...other} render={(props) => 
-        isAuth ? <Component {...props} /> : <Redirect to="/auth" />} path='/' exact component={Exit}>   
+            isAuthenticated ||  isToken ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }} />}>   
         </Route>
     )
 };
