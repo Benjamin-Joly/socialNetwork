@@ -1,7 +1,7 @@
 const Profile = ({ history }) => {
     const logOut = () => {
         sessionStorage.clear();
-        history.push('/login');
+        window.location.reload()
     };
     const goToDashB = () => {
        history.push('/profile');

@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
-import loginReq from '../utils/login';
-import { useContext } from 'react';
-import { AuthCtx } from '../Contexts/AuthCtx';
-import { UserCtx } from '../Contexts/UserCtx';
+import loginReqAdmin from '../utils/adminLogin';
 
-const SigninPage = (props) => {
-    const { isAuth, setAuth } = useContext(AuthCtx);
-    //console.log(isAuth);
-    isAuth === true ? props.history.push('/chat') : <></>;
-    const { userDatas, setUserDatas } = useContext(UserCtx);
-    //console.log(userDatas);
+
+const AdminSigninPage = (props) => {
 
     const [err, setErr] = useState('');
 
@@ -21,9 +14,9 @@ const SigninPage = (props) => {
             email : email.current.value,
             password : password.current.value
         };
-        const response = await loginReq(user);
+        const response = await loginReqAdmin(user);
         //console.log(response);
-        if(response.valid === true){
+        if(response.admin === true){
             sessionStorage.setItem('session', response.session);
             const { userId, username, email, position, description, imgUrl } = response.user;
             sessionStorage.setItem('user', userId+ ' ' + username + ' '+ email + ' '+ position + ' '+ description + ' '+ imgUrl);
@@ -35,16 +28,10 @@ const SigninPage = (props) => {
                 description :description,
                 imgUrl : imgUrl
             };
-            setUserDatas(user);
-            //console.log(userDatas);
-            props.history.push('/chat');
+            props.history.push('/admin');
         } else {
             setErr(response.message);
         }
-    };
-
-    const goTo = () => {
-        props.history.push('/register');
     };
     return(
         <div className="gate">
@@ -61,10 +48,9 @@ const SigninPage = (props) => {
                 </form>
                 <p className='error-message'>{err}</p>
                     <button id="login-btn" value="temporaire" className="cta cta__gate" onClick={logUser}>Se connecter</button>
-                    <p className="link__gate" onClick={goTo}>register</p>
                 </div>
         </div>
     )
 }
 
-export default SigninPage;
+export default AdminSigninPage;

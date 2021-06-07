@@ -1,8 +1,10 @@
 import Header from '../Components/Header';
 import Profile from '../Components/Profile';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserCtx } from '../Contexts/UserCtx';
 
 const DashboardPage = (props) => {
+    const { userDatas, setUserDatas } = useContext(UserCtx);
     const [user, setUser] = useState();
     console.log(props);
     return(
@@ -13,17 +15,12 @@ const DashboardPage = (props) => {
                 <h1 className="user__heading">Mon compte</h1>
                 <div className="user__infos">
                     <div className="user__input-wrap">
-                        <label htmlFor='user-name' className="user__name">{user ? user[1] + ' ' + user[2] : <></>}</label>
+                        <label htmlFor='user-name' className="user__name">{userDatas ? userDatas.username : <></>}</label>
                         <input className='user__input' type="text" id="user-name" />
                         <button className="cta cta__user-input">modifier</button>
                 </div>
                 <div className="user__input-wrap">
-                    <label htmlFor='user__email' className="user__email">{user ? user[3] : <></>}</label>
-                    <input className='user__input' type="text" id="user-email" />
-                    <button className="cta cta__user-input">modifier</button>
-                </div>
-                <div className="user__input-wrap">
-                    <label htmlFor='user__position' className="user__position">{user ? user[4] : <></>}</label>
+                    <label htmlFor='user__position' className="user__position">{userDatas ? userDatas.position : <></>}</label>
                     <input className='user__input' type="text" id="user-position" />
                     <button className="cta cta__user-input">modifier</button>
                 </div>

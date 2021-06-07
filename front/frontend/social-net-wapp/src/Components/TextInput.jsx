@@ -1,20 +1,23 @@
 import ioClient from 'socket.io-client';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import getUserData from '../utils/getUserDatas';
+import { UserCtx } from '../Contexts/UserCtx';
 
 const TextInput = (props) => {
     const [ gifs, setGifs ] = useState([]);
     const [ isOpen, setOpen ] = useState(false);
+    const { userDatas, setUserDatas } = useContext(UserCtx);
     const messRef = React.createRef();
     const searchRef = React.createRef();
     const token = sessionStorage.getItem('session');
-    const [ userId, firstName, lastName, position ] = getUserData();
+    console.log(userDatas);
+    const { userId, username, email, position, description, imgUrl }  = userDatas;
     if(!token){
-        props.history.push('/login');
+        props.history.push('/login'); 
     };
     const socket = ioClient('http://localhost:3000', {
         query : {
-            user :  firstName + ' ' + lastName,
+            user :  username,
             userId : userId
         },
         auth : {
@@ -29,7 +32,7 @@ const TextInput = (props) => {
             socket.emit('newMessage', {
                     messageBody : messRef.current.value,
                     userId : userId,
-                    username : firstName+' '+lastName,
+                    username : username,
                     position : position
             });
         };
@@ -43,9 +46,9 @@ const TextInput = (props) => {
         console.log(fullGif);
         if(socket){
             socket.emit('newGif', {
-                    messageBody : `${firstName} has sent a Gif`,
+                    messageBody : `${username} has sent a Gif`,
                     userId : userId,
-                    username : firstName+' '+lastName,
+                    username : username,
                     position : position,
                     messageGifId : `${target}`,
                     gifUrl : fullGif

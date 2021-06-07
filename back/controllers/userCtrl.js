@@ -91,7 +91,6 @@ exports.loginUser = (req, res, next) => {
                             process.env.TOKENSECRET,
                             { expiresIn: '2h' }
                         );
-                        console.log(token);
                         res.status(200).header('Authorization', token).send({
                            session : token,
                            user : {                           
@@ -111,6 +110,74 @@ exports.loginUser = (req, res, next) => {
             res.status(400).send({
                 message : 'fields must be correctly filled',
                 valid : false
+            });
+        }
+        
+    }catch(error){
+        res.status(500).send({
+            message : 'somth went wrong when login :s ' + error,
+            valid : false
+        });
+    }
+}
+
+exports.loginAdmin = (req, res, next) => {
+    try{ 
+        const {email, password} = req.body;
+        if(email.length >= 1 && password.length >=1 && emailValidation(email)){
+            const admin = db.query(`SELECT * FROM adminaccounts WHERE email IN (?)`,
+            email,
+            async (error, result) => {
+                if (error) { console.log('Smth went wrong when querying DB ' + error); }
+
+                const userLogs = result[0];
+
+                if (!userLogs) { res.status(404).send({
+                    message : 'wrong ID mate, check your papers',
+                    valid : false,
+                    admin : false
+                }); 
+                } else {
+                    const validLogs = await bcrypt.compare(password, userLogs.password);
+                    if (!validLogs) { 
+                        res.status(401).header('response', false).send({
+                            message : 'wrong ID mate, check your papers',
+                            valid : false,
+                            admin : false
+                        }); 
+                    }else{
+                        const userId = userLogs.userId;
+                        const token = jwt.sign(
+                            {userId: userLogs.idAdmins,
+                            username : userLogs.firstName + ' ' + userLogs.lastName,
+                            position : userLogs.position,
+                            valid : true, 
+                            admin : true
+                            },
+                            process.env.TOKENSECRET,
+                            { expiresIn: '2h' }
+                        );
+                        res.status(200).header('Authorization', token).send({
+                           session : token,
+                           user : {                           
+                                userId : userId,
+                                username: userLogs.firstName + ' ' + userLogs.lastName,
+                                email : userLogs.email,
+                                position: userLogs.position,
+                                description : userLogs.description,
+                                imgUrl : userLogs.imgUrl
+                            },
+                            valid : true,
+                            admin : true
+                        });
+                    }       
+                }
+            });
+        }else{
+            res.status(400).send({
+                message : 'fields must be correctly filled',
+                valid : false,
+                admin :false
             });
         }
         
@@ -146,6 +213,25 @@ exports.getOneUser = async (req, res, next) => {
                     const userDatas = result[0];
                     const { userId, firstName, lastName, email, position, hash, description } = userDatas
                     res.status(200).send([userId, firstName, lastName, email, position, description]);
+            });
+      } catch {
+        res.status(401).send('Access denied, login to continue');
+      }
+}
+
+exports.getUsers = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+        const userId = decodedToken.userId;
+            const user = db.query(`SELECT * FROM users`,
+            (err, result) => {
+                if (err) { console.log('Smth went wrong when querying DB ' + error); }
+                    const userDatas = result;
+                    console.log(userDatas);
+                    //const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                    res.status(200).send(result);
+                    //[userId, firstName, lastName, email, position, description]
             });
       } catch {
         res.status(401).send('Access denied, login to continue');

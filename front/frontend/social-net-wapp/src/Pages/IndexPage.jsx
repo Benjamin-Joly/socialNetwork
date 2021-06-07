@@ -3,10 +3,8 @@ import { AuthCtx } from '../Contexts/AuthCtx';
 
 const IndexPage = (props) => {
     const { isAuth, setAuth } = useContext(AuthCtx);
-
-    if(isAuth === true){
-        props.history.push('/chat');
-    }
+    console.log(isAuth);
+    isAuth === true ? props.history.push('/chat') : props.history.push('/login');
     return(
         <div className="index__wrap">
             

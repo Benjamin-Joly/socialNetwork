@@ -1,21 +1,23 @@
 import React from 'react';
 import ioClient from 'socket.io-client';
 import getUserData from '../utils/getUserDatas';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserCtx } from '../Contexts/UserCtx';
 
 const Messages = ({ content, history }) => {
     const messRef = React.createRef();
     const [updateBody, setUpdateBody] = useState('');
     const messages = content;
     const token = sessionStorage.getItem('session');
-    const [ userId, firstName, lastName, position ] = getUserData();
+    const { userDatas, setUserDatas } = useContext(UserCtx);
+    console.log(userDatas);
     if(!token){
         history.push('/login');
     }
     const socket = ioClient('http://localhost:3000', {
         query : {
-            user :  firstName + ' ' + lastName,
-            userId : userId
+            user :  userDatas.username,
+            userId : userDatas.userId
         },
         auth : {
             token : sessionStorage.getItem('session')
@@ -23,7 +25,7 @@ const Messages = ({ content, history }) => {
         forceNew : true
     });
     const mineOrTheirs = (message) => {
-        if(message.messageAuthor === parseInt((userId), 10)){
+        if(message.messageAuthor === parseInt((userDatas.userId), 10)){
             return 'message__wrap message__mine'
         }else{
             return 'message__wrap message__theirs'
@@ -69,7 +71,7 @@ const Messages = ({ content, history }) => {
                         <p className="message__body">{message.messageBody}</p>
                         {message.gifUrl ? <img id={message.messageGifId} src={message.gifUrl} alt="" className='gif-message__gif' /> : <></>}
                         <p className="message__date">{message.messageDate}</p>
-                    {message.messageAuthor === parseInt((userId), 10) ? (
+                    {message.messageAuthor === parseInt((userDatas.userId), 10) ? (
                         <div className="btn__wrap">
                             <button id={message.messageId} className="cta" onClick={deleteMessage}>supprimer</button>
                             <p id={message.messageId} className="update__link" onClick={toggleUpdateInput}>update</p>

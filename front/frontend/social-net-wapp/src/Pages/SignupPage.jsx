@@ -1,9 +1,13 @@
 import React from 'react';
 import signupReq from '../utils/signup';
-import { useState } from 'react';
+import loginReq from '../utils/login';
+import { useState, useContext } from 'react';
+import { AuthCtx } from '../Contexts/AuthCtx';
+import { UserCtx } from '../Contexts/UserCtx';
 
 const SignupPage = (props) => {
-
+    const { isAuth, setAuth } = useContext(AuthCtx);
+    const { userDatas, setUserDatas } = useContext(UserCtx);
     const [err, setErr] = useState('');
 
     const firstName = React.createRef();
@@ -14,15 +18,53 @@ const SignupPage = (props) => {
 
     const registerUser = async () => {
         const user = {
-            fName : firstName.current.value,
-            lName : lastName.current.value,
+            firstName : firstName.current.value,
+            lastName : lastName.current.value,
             position : position.current.value,
             email : email.current.value,
             password : password.current.value
         };
         const response = await signupReq(user);
-        response.valid === true ? props.history.push('/login') : setErr(response.message);
+        console.log(response);
+        
+        if(response.valid === true){
+            setAuth(true);
+            setUserDatas(user)
+            logUser(user.email, user.password);
+        }else{
+            setErr(response.message);
+            console.log(err);
+            props.history.push('/login')
+        }
+        //response.valid === true ? props.history.push('/login') : setErr(response.message);
     }
+    const logUser = async (email, password) => {
+        const user = {
+            email : email,
+            password : password
+        };
+        console.log(user);
+        const response = await loginReq(user);
+        //console.log(response);
+        if(response.valid === true){
+            sessionStorage.setItem('session', response.session);
+            const { userId, username, email, position, description, imgUrl } = response.user;
+            sessionStorage.setItem('user', userId+ ' ' + username + ' '+ email + ' '+ position + ' '+ description + ' '+ imgUrl);
+            const user = {
+                userId : userId,
+                username : username,
+                email : email,
+                position : position,
+                description :description,
+                imgUrl : imgUrl
+            };
+            setUserDatas(user);
+            //console.log(userDatas);
+            props.history.push('/chat');
+        } else {
+            setErr(response.message);
+        }
+    };
     const goTo = () => {
         props.history.push('/login');
     };

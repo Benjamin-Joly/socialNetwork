@@ -2,9 +2,9 @@ import jwt_decode from 'jwt-decode';
 import { useContext, useEffect, useLayoutEffect } from 'react';
 import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
-export const Auth = ({ component: Component, ...other }) => {
+export const Auth = ({ component: Component, ...rest }) => {
     const {isAuth, setAuth} = useContext(AuthCtx);
     const {userDatas, setUserDatas} = useContext(UserCtx);
     console.log(isAuth);
@@ -15,6 +15,7 @@ export const Auth = ({ component: Component, ...other }) => {
             const decoded = jwt_decode(session);
             console.log(decoded.valid);
             setAuth(decoded.valid);
+            console.log(isAuth);
         }else{
             console.log('session not loaded');
             setAuth(false);
@@ -45,5 +46,8 @@ export const Auth = ({ component: Component, ...other }) => {
         }
     }, [])
 
-  return isAuth === true ? <Component {...other} /> : <Redirect to={{ pathname: "/login" }} />
+  //return isAuth === true ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }} />
+  return isAuth === true ?  <Route {...rest} render={
+    props => <Component {...rest} {...props} />
+  } /> : <Redirect to={{ pathname: "/login" }} />
 }
