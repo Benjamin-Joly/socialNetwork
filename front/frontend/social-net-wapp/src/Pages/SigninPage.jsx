@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
-import loginReq from '../utils/login';
-import { useContext } from 'react';
+//react
+import React, { useState, useContext } from 'react';
+//ctx
 import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
+import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
+//utils
+import loginReq from '../utils/login';
+import arrayBufferToBase64 from '../utils/bufferTo64';
+
 
 const SigninPage = (props) => {
+    //ctx
     const { isAuth, setAuth } = useContext(AuthCtx);
-    //console.log(isAuth);
-    isAuth === true ? props.history.push('/chat') : <></>;
+    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
     const { userDatas, setUserDatas } = useContext(UserCtx);
-    //console.log(userDatas);
-
+    //state
     const [err, setErr] = useState('');
-
+    //ref
     const email = React.createRef();
     const password = React.createRef();
-
+    //component logic
+    isAuth === true ? props.history.push('/chat') : <></>;
     const logUser = async () => {
         const user = {
             email : email.current.value,
             password : password.current.value
         };
         const response = await loginReq(user);
-        //console.log(response);
         if(response.valid === true){
             sessionStorage.setItem('session', response.session);
             const { userId, username, email, position, description, imgUrl } = response.user;
@@ -33,8 +37,21 @@ const SigninPage = (props) => {
                 email : email,
                 position : position,
                 description :description,
-                imgUrl : imgUrl
+                imgUrl : 'imgUrl'
             };
+            if(response.file){
+                const buff = response.file.fileData.data;
+                const data = arrayBufferToBase64(buff);
+                //console.log(data);
+                const profileObj = {
+                    fileAuthor : response.file.fileAuthor,
+                    fileData : data,
+                    fileName : response.file.fileName,
+                    fileType : response.file.fileType,
+                    idfile : response.file.idfile
+                };
+                setProfilePic(profileObj)
+            }
             setUserDatas(user);
             //console.log(userDatas);
             props.history.push('/chat');

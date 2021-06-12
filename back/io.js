@@ -41,15 +41,15 @@ const io = require('socket.io')(server, {
   //handshake & greetings
   io.on('connection', (socket) => {
     socket.send(`${socket.handshake.query.user} ready to go`);
-    console.log('connected');
+    //console.log(`${socket.handshake.query.user} connected`);
     socket.on('disconnect', () => {
-      console.log('disconnected');
+      //console.log(`${socket.handshake.query.user} disconnected`);
     });
     socket.on('joinRoom', (data) => {
-      console.log(data);
+      //console.log(data);
     });
     socket.on('leaveRoom', (data) => {
-      console.log(data);
+      //console.log(data);
       socket.send(`${socket.handshake.query.user} has left the room`);
     });
   });
@@ -57,14 +57,14 @@ const io = require('socket.io')(server, {
   //New message event
   io.on('connection', (socket) => {
     socket.on('newMessage', (message) => {
-
-      const {messageBody, userId, username, position} = message;
+      const {messageBody, userId, username, position, profilePicData} = message;
+      //console.log('message ', messageBody, userId, username, position);
       let date = Date();
         date = date.toString();
         const isUp = false;
 
-      db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp) VALUES (?, ?, ?, ?, ?, ?)`, 
-      [messageBody, userId, username, position, date, isUp],
+      db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, profilePicData) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
+      [messageBody, userId, username, position, date, isUp, profilePicData],
       (error, result) => {
           if(error){socket.send(error)}
       db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
@@ -84,7 +84,7 @@ const io = require('socket.io')(server, {
   io.on('connection', (socket) => {
     socket.on('newGif', (gif) => {
       const { messageBody, userId, username, position, messageGifId, gifUrl } = gif;
-      console.log(messageBody, userId, username, position, messageGifId, gifUrl);
+      //console.log(messageBody, userId, username, position, messageGifId, gifUrl);
       let date = Date();
       date = date.toString();
       const isUp = false;
@@ -92,7 +92,7 @@ const io = require('socket.io')(server, {
       [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl],
       (error, result) => {
           if(error){socket.send(error)}
-          console.log(result);
+          //console.log(result);
       db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
       (error, result) => {
         if(error){console.log(error)}
@@ -125,9 +125,9 @@ io.on('connection', (socket) => {
 //Update event
 io.on('connection', (socket) => {
   socket.on('update', (message) => {
-    console.log('update ', message);
+    //console.log('update ', message);
     const messBody = message.messageBody;
-    console.log(messBody);
+    //console.log(messBody);
     const messId = message.btnId;
     db.query(`UPDATE messages SET messageBody = "${messBody}" WHERE messageId = ${messId}`,
         (error, result) => {
@@ -141,7 +141,49 @@ io.on('connection', (socket) => {
         }
     });
   })
-})
+});
+
+//img Update event
+
+io.on('connection', (socket) => {
+  socket.on('imgUpdate', (image) => {
+    console.log('update image');
+    const imageData = image.fileData;
+    const userId = image.author;
+    console.log(imageData ? console.log('imgdata ok') : console.log('imgData notOK'));
+    db.query(`UPDATE messages SET profilePicData = "${imageData}" WHERE messageAuthor = ${userId}`,
+        (error, result) => {
+            if(error){socket.send(error)};
+            if(result){console.log('updated')}
+        });
+    db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
+    (error, result) => {
+        if(error){console.log(error)}
+        else{
+          io.send(result);
+        }
+    });
+  })
+});
+
+io.on('connection', (socket) => {
+  socket.on('userUpdate', (author) => {
+    console.log('auteur', author);
+    db.query(`UPDATE messages SET messageAuthorName = "${author.username}", messageAuthorPosition = "${author.position}" WHERE messageAuthor = ${author.userId}`,
+        (error, result) => {
+            if(error){socket.send(error)};
+            if(result){console.log('updated')}
+        });
+    db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
+    (error, result) => {
+        if(error){console.log(error)}
+        else{
+          io.send(result);
+        }
+    });
+  })
+});
+
 
 //Error handle
   io.on('error', (socket) => {

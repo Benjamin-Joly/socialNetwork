@@ -1,21 +1,25 @@
-import React from 'react';
-import signupReq from '../utils/signup';
-import loginReq from '../utils/login';
-import { useState, useContext } from 'react';
+//react
+import React, { useState, useContext } from 'react';
+//ctx
 import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
+//utils
+import signupReq from '../utils/signup';
+import loginReq from '../utils/login';
 
 const SignupPage = (props) => {
+    //ctx
     const { isAuth, setAuth } = useContext(AuthCtx);
     const { userDatas, setUserDatas } = useContext(UserCtx);
+    //state
     const [err, setErr] = useState('');
-
+    //ref
     const firstName = React.createRef();
     const lastName = React.createRef();
     const position = React.createRef();
     const email = React.createRef();
     const password = React.createRef();
-
+    //component logic
     const registerUser = async () => {
         const user = {
             firstName : firstName.current.value,
@@ -26,7 +30,6 @@ const SignupPage = (props) => {
         };
         const response = await signupReq(user);
         console.log(response);
-        
         if(response.valid === true){
             setAuth(true);
             setUserDatas(user)
@@ -36,8 +39,8 @@ const SignupPage = (props) => {
             console.log(err);
             props.history.push('/login')
         }
-        //response.valid === true ? props.history.push('/login') : setErr(response.message);
     }
+    //this can be refactored (not DRY)
     const logUser = async (email, password) => {
         const user = {
             email : email,
@@ -45,7 +48,6 @@ const SignupPage = (props) => {
         };
         console.log(user);
         const response = await loginReq(user);
-        //console.log(response);
         if(response.valid === true){
             sessionStorage.setItem('session', response.session);
             const { userId, username, email, position, description, imgUrl } = response.user;
@@ -59,7 +61,6 @@ const SignupPage = (props) => {
                 imgUrl : imgUrl
             };
             setUserDatas(user);
-            //console.log(userDatas);
             props.history.push('/chat');
         } else {
             setErr(response.message);

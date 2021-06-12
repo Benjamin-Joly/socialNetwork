@@ -91,17 +91,26 @@ exports.loginUser = (req, res, next) => {
                             process.env.TOKENSECRET,
                             { expiresIn: '2h' }
                         );
-                        res.status(200).header('Authorization', token).send({
-                           session : token,
-                           user : {                           
-                                userId : userId,
-                                username: userLogs.firstName + ' ' + userLogs.lastName,
-                                email : userLogs.email,
-                                position: userLogs.position,
-                                description : userLogs.description,
-                                imgUrl : userLogs.imgUrl
-                            },
-                            valid : true
+                        db.query(`SELECT * FROM profilepic WHERE fileAuthor =${userId}`, 
+                            (error, result) => {
+                            if(error){console.log(error)}
+                            else{
+                                //console.log(result);
+                                const file = result[0];
+                                res.status(200).header('Authorization', token).send({
+                                    session : token,
+                                    user : {                           
+                                         userId : userId,
+                                         username: userLogs.firstName + ' ' + userLogs.lastName,
+                                         email : userLogs.email,
+                                         position: userLogs.position,
+                                         description : userLogs.description,
+                                         imgUrl : userLogs.imgUrl
+                                     },
+                                     file : file,
+                                     valid : true
+                                 });
+                            }
                         });
                     }       
                 }
@@ -228,7 +237,6 @@ exports.getUsers = async (req, res, next) => {
             (err, result) => {
                 if (err) { console.log('Smth went wrong when querying DB ' + error); }
                     const userDatas = result;
-                    console.log(userDatas);
                     //const { userId, firstName, lastName, email, position, hash, description } = userDatas
                     res.status(200).send(result);
                     //[userId, firstName, lastName, email, position, description]
@@ -236,4 +244,59 @@ exports.getUsers = async (req, res, next) => {
       } catch {
         res.status(401).send('Access denied, login to continue');
       }
+}
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+        const userId = decodedToken.userId;
+        const admin = decodedToken.admin;
+            if(admin === true){
+                const user = req.body.user;
+                db.query(`DELETE FROM users WHERE userId IN (${user})`,
+                    (error, result) => {
+                        if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
+                        else{
+                            res.status(200).send('User(s) suppressed !');
+                        }
+                });
+            }else{
+                res.status(401).send('Access denied, ask for admin rights to continue');
+            }
+            
+      } catch {
+        res.status(401).send('Access denied, login to continue');
+      }
+};
+
+exports.updateSelf = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+        const data = req.body;
+        let { firstName, lastName, userId, position } = data;
+        console.log('data block ', data);
+        firstName ? console.log('fN defined') : firstName = decodedToken.username.split(' ')[0];
+        lastName ? console.log('lastName defined') : lastName = decodedToken.username.split(' ')[1];
+        userId ? console.log('userId defined') : userId = decodedToken.userId;
+        db.query(`UPDATE users SET firstName = "${firstName}", lastName = "${lastName}", position="${position}" WHERE userId = ${userId}`,
+        (error, result) => {
+            if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
+            else{
+                db.query(`SELECT * FROM users WHERE userId IN (?)`,
+            userId,
+            (err, result) => {
+                if (err) { console.log('Smth went wrong when querying DB ' + error); }
+                    const userDatas = result[0];
+                    const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                    
+                    res.status(200).send([userId, firstName, lastName, email, position, description]);
+            });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).send(error)
+    }
 }

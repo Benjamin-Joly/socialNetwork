@@ -6,10 +6,13 @@ dotenv.config();
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization;
-    console.log('admin token ', token);
     const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
-    console.log('admin token ', decodedToken);
-      next();
+      decodedToken.admin === true ?  next() : res.status(401).send({
+        valid : false,
+        admin : false,
+        message : 'Not admin'
+      });
+     
 
   } catch (error) {
     res.status(401).send({

@@ -1,17 +1,27 @@
-import ioClient from 'socket.io-client';
+//react
 import React, { useState, useContext } from 'react';
-import getUserData from '../utils/getUserDatas';
+//vendors
+import ioClient from 'socket.io-client';
+//ctx
 import { UserCtx } from '../Contexts/UserCtx';
+import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
 
 const TextInput = (props) => {
+    //ctx
+    const { userDatas, setUserDatas } = useContext(UserCtx);
+    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
+    //states
     const [ gifs, setGifs ] = useState([]);
     const [ isOpen, setOpen ] = useState(false);
-    const { userDatas, setUserDatas } = useContext(UserCtx);
+    //ref
     const messRef = React.createRef();
     const searchRef = React.createRef();
+    //component logic
+    const dataString = `data:${profilePic ? profilePic.fileType : ''};base64,${profilePic ? profilePic.fileData : ''}`;
+    //socket.io block can be refactored (not DRY)
     const token = sessionStorage.getItem('session');
-    console.log(userDatas);
     const { userId, username, email, position, description, imgUrl }  = userDatas;
+    console.log(userDatas);
     if(!token){
         props.history.push('/login'); 
     };
@@ -33,7 +43,8 @@ const TextInput = (props) => {
                     messageBody : messRef.current.value,
                     userId : userId,
                     username : username,
-                    position : position
+                    position : position,
+                    profilePicData : dataString
             });
         };
         messRef.current.value = '';
@@ -43,7 +54,6 @@ const TextInput = (props) => {
         e.preventDefault();
         const target = parseInt((e.target.id), 10);
         const fullGif = e.target.dataset.fullsize;
-        console.log(fullGif);
         if(socket){
             socket.emit('newGif', {
                     messageBody : `${username} has sent a Gif`,
@@ -81,7 +91,6 @@ const TextInput = (props) => {
          if(response){
              const data = await response.json();
              data ? setGifs(data.results) : console.log('no datas');
-             console.log(gifs);
          }
     };
 
@@ -100,7 +109,6 @@ const TextInput = (props) => {
          const response = await fetch(url, myHeader);
          if(response){
             const data = await response.json();
-            console.log(data);
         }
     }
     const toggleGifMenu = (e) => {
@@ -124,7 +132,7 @@ const TextInput = (props) => {
                                 <input className='gif-search__input' type="text" ref={searchRef} onInput={getSomeGif} placeholder='Search your Gif here' />
                     </div>
                         {gifs.map((gif) => (
-                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullSize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
+                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullsize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
                         ))}
                         <div className="gif-more">
                             <button className='cta gif-more__btn disabled' onClick={getNextGifs}>Plus</button>

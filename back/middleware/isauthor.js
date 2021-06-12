@@ -6,7 +6,6 @@ module.exports = async (req, res, next) => {
       const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
       const userId = decodedToken.userId;
       const author = parseInt(req.body.messageAuthor, 10);
-      console.log(author);
       if (author === userId) {
         next();
       } else {

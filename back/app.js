@@ -1,13 +1,17 @@
 const express = require('express');
 const app = express();
-const mysql = require('mysql');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/user');
-const testRoutes = require('./routes/test');
 const messageRoutes = require('./routes/messages');
+const multerRoutes = require('./routes/multer');
+const helmet = require("helmet");
+const path = require('path');
+const multer = require('multer');
 dotenv.config();
 
 app.use(express.json());
+
+app.use(helmet());
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,5 +22,6 @@ app.use((req, res, next) => {
 
 app.use('/', userRoutes);
 app.use('/messages/', messageRoutes);
+app.use('/', multerRoutes);
 
 module.exports = app;

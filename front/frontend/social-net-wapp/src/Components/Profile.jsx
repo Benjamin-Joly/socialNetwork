@@ -1,4 +1,13 @@
+//react
+import { useContext } from 'react';
+//ctx
+import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
+
+
 const Profile = ({ history }) => {
+    //ctx
+    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
+    //component logic
     const logOut = () => {
         sessionStorage.clear();
         window.location.reload()
@@ -9,7 +18,9 @@ const Profile = ({ history }) => {
     return (
         <section id="profile__menu">
             <div className="profile__wrap">
-                <div className="profile__pic"></div>
+                <div className="profile__pic">
+                <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : ''} alt="Profile picture" className="profile__img" />
+                </div>
                 <div className="profile__settings cta__profile" onClick={goToDashB}>
                     <svg id="pic__account" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
                         <g data-name="Groupe 62">

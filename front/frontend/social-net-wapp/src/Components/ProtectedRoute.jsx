@@ -6,7 +6,6 @@ const ProtectedRoute = ({ component : Component, ...other}) => {
     const isToken = JSON.parse(isAuthenticated)?.login;
     console.log(isToken);
     return (
-        // isAuthenticated ||  isToken ? <Component /> : <Redirect to={{ pathname: "/login" }} />
         <Route {...other} render={(props) => 
             isAuthenticated ||  isToken ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }} />}>   
         </Route>

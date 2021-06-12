@@ -1,0 +1,50 @@
+.admin{
+    &__box{
+        background:white;
+        margin: 2em auto 2em auto;
+        padding:2em;
+        border-radius:16px;
+        display:flex;
+        flex-direction: column;
+        justify-content: space-between;
+        max-width:900px;
+    }
+    &__description{
+        font-weight:600;
+        font-size:1.2em;
+        max-width:600px;
+    }
+    &__user-form{
+        margin:2em 0 2em 0;
+    }
+    &__message-form{
+        margin:2em 0 2em 0;
+    }
+    &__user-choice{
+        margin-bottom : 1em;
+        display:flex;
+        justify-content: space-between;
+        width:80%;
+    }
+    &__message-choice{
+        margin-bottom : 1em;
+        display:flex;
+        justify-content: space-between;
+        width:80%;
+            & label{
+                max-height:150px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+    }
+    &__delete-btn{
+        align-self: flex-end;
+        justify-self: flex-end;
+    }
+    &__underline-btn{
+        align-self: flex-end;
+        justify-self: flex-end;
+        margin:1em;
+    }
+}

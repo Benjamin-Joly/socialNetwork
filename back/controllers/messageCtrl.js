@@ -93,3 +93,27 @@ exports.updateMessage = async (req, res, next) => {
         res.status(500).send(error);
     }
 }
+
+
+exports.deleteMessages = async (req, res, next) => {
+    try{
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+        const admin = decodedToken.admin;
+            if(admin === true){
+                const messages = req.body.messages;
+                console.log('mess ',messages);
+                db.query(`DELETE FROM messages WHERE messageId IN (${messages})`,
+                    (error, result) => {
+                        if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
+                        else{
+                            res.status(200).send('Message(s) suppressed !');
+                        }
+                });
+            }else{
+                res.status(401).send('Access denied, ask for admin rights to continue');
+            }
+    }catch(error){
+        res.status(500).send(error);
+    }
+}

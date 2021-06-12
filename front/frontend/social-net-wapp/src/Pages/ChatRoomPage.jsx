@@ -1,19 +1,48 @@
+//react
 import React, { useEffect, useState, useContext } from 'react';
+//ctx
+import { AuthCtx } from '../Contexts/AuthCtx';
+import { UserCtx } from '../Contexts/UserCtx';
+import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
+//vendors
 import ioClient from 'socket.io-client';
+//components
 import Profile from '../Components/Profile';
 import TextInput from '../Components/TextInput';
 import Messages from '../Components/Messages';
 import Header from '../Components/Header';
-import { AuthCtx } from '../Contexts/AuthCtx';
-import { UserCtx } from '../Contexts/UserCtx';
+//utils
+import getImg from '../utils/getImg';
+import arrayBufferToBase64 from '../utils/bufferTo64';
+
 
 
 const ChatroomPage = (props) => {
-    const [ messages, setMessages ] = useState([]);
+    //ctx
     const { isAuth, setAuth } = useContext(AuthCtx);
     const { userDatas, setUserDatas } = useContext(UserCtx);
-    //console.log(userDatas);
+    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
+    //state
+    const [ messages, setMessages ] = useState([]);
+    console.log(userDatas);
+    //component logic
+    const getProfilePic = async () => {
+        const response = await getImg();
+        if(response.file){
+            const buff = response.file.fileData.data;
+            const data = arrayBufferToBase64(buff);
+            const profileObj = {
+                fileAuthor : response.file.fileAuthor,
+                fileData : data,
+                fileName : response.file.fileName,
+                fileType : response.file.fileType,
+                idfile : response.file.idfile
+            };
+            setProfilePic(profileObj)
+        }
+    }
     useEffect(() => {  
+                    getProfilePic(); 
                     const { userId, username, email, position, description, imgUrl } = userDatas;
                     const socket = ioClient('http://localhost:3000', {
                         query : {
@@ -26,7 +55,6 @@ const ChatroomPage = (props) => {
                         forceNew : true
                     });
                     socket.on('message', data => {
-                        console.log(data);
                         setMessages([...data]);
                     });
                     socket.on('notAllowed', data => {
@@ -42,11 +70,19 @@ const ChatroomPage = (props) => {
                         console.log('new');
                         setMessages(message);
                     });
+                    socket.on('imgUpdate', message => {
+                        console.log('new');
+                        setMessages(message);
+                    });
+                    socket.on('userUpdate', message => {
+                        console.log('new');
+                        setMessages(message);
+                    });
                     return () => {
                         socket.emit('leaveRoom', {
                             message : 'Byebye message'
                         });
-                    } 
+                    }
     }, []);
    
     return(

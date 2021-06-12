@@ -1,11 +1,16 @@
-import jwt_decode from 'jwt-decode';
+//react
 import { useContext, useEffect } from 'react';
+//vendors
+import jwt_decode from 'jwt-decode';
+//ctx
 import { AdminCtx } from '../Contexts/AdminCtx';
 import { Redirect, Route } from 'react-router-dom';
 
 export const AdminAuth = ({ component: Component, ...rest }) => {
+  //ctx
     const {adminAuth, setAdminAuth} = useContext(AdminCtx);
     console.log('AdminAuth ', adminAuth);
+  //component logic
      useEffect(() => {
         const session = sessionStorage.getItem("session");
         if(session){
@@ -15,9 +20,7 @@ export const AdminAuth = ({ component: Component, ...rest }) => {
             console.log('session not loaded');
                 setAdminAuth(false);
         };
-    }, [])
-    
-  //return isAuth === true ? <Component {...props} /> : <Redirect to={{ pathname: "/login" }} />
+    }, []);    
   return adminAuth === true ?  <Route {...rest} render={
     props => <Component {...rest} {...props}/>
   } /> : <Redirect to={{ pathname: "/login/admin" }} />

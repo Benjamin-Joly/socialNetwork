@@ -1,16 +1,24 @@
-import React from 'react';
+//react
+import React, { useState, useContext } from 'react';
+//vendors
 import ioClient from 'socket.io-client';
-import getUserData from '../utils/getUserDatas';
-import { useState, useContext } from 'react';
+//ctx
 import { UserCtx } from '../Contexts/UserCtx';
+import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
 
 const Messages = ({ content, history }) => {
-    const messRef = React.createRef();
-    const [updateBody, setUpdateBody] = useState('');
-    const messages = content;
-    const token = sessionStorage.getItem('session');
+    //ctx
+    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
     const { userDatas, setUserDatas } = useContext(UserCtx);
-    console.log(userDatas);
+    //states
+    const [updateBody, setUpdateBody] = useState('');
+    const [whosMess, setWhosMess] = useState('message__wrap')
+    //ref
+    const messRef = React.createRef();
+    //component logic
+    const messages = content;
+    //socket.io block can be refactored (not DRY)
+    const token = sessionStorage.getItem('session');
     if(!token){
         history.push('/login');
     }
@@ -67,12 +75,15 @@ const Messages = ({ content, history }) => {
         <section className="messages__wrap">
                 {messages.map((message) => (
                     <div key={message.messageId} id={message.messageId} className={mineOrTheirs(message)}>
+                        <div className="message__author-wrap">
+                        <img src={message.profilePicData ? `${message.profilePicData}` : ''} alt="Profile picture" className="message__author-img" />
                         <p className="message__author">{message.messageAuthorName}</p>
+                    </div>
                         <p className="message__body">{message.messageBody}</p>
                         {message.gifUrl ? <img id={message.messageGifId} src={message.gifUrl} alt="" className='gif-message__gif' /> : <></>}
                         <p className="message__date">{message.messageDate}</p>
                     {message.messageAuthor === parseInt((userDatas.userId), 10) ? (
-                        <div className="btn__wrap">
+                        <div key={message.messageId} className="btn__wrap">
                             <button id={message.messageId} className="cta" onClick={deleteMessage}>supprimer</button>
                             <p id={message.messageId} className="update__link" onClick={toggleUpdateInput}>update</p>
                             <div key={message.messageId} className='update__wrap disabled'>
