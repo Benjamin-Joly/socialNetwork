@@ -11,7 +11,9 @@ export const Auth = ({ component: Component, ...rest }) => {
     //ctx
     const {isAuth, setAuth} = useContext(AuthCtx);
     const {userDatas, setUserDatas} = useContext(UserCtx);
+    
     //component logic
+
     useEffect(() => {
         const session = sessionStorage.getItem("session");
         if(session){
@@ -21,7 +23,7 @@ export const Auth = ({ component: Component, ...rest }) => {
             setAuth(false);
         }
     }, []);
-
+    
     useEffect(() => {
         const userStrg = sessionStorage.getItem("user");
         if(userStrg){

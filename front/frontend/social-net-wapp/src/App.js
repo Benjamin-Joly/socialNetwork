@@ -24,8 +24,6 @@ function App(props) {
   const [userDatas, setUserDatas] = useState();
   const [ profilePic, setProfilePic ] = useState();
 
-  console.log('Admin ', adminAuth);
-  console.log('User ', isAuth);
   console.log(userDatas);
   
   return (
@@ -45,8 +43,8 @@ function App(props) {
                   <Auth data={props} component={ChatRoomPage} />
                 </Route>
                 </ProfilePicCtx.Provider>
-                <Route exact path='/login/admin' component={AdminSigninPage}/>
           <AdminCtx.Provider value={{adminAuth, setAdminAuth}}>
+                <Route exact path='/login/admin' component={AdminSigninPage}/>
                 <Route path="/admin">
                   <AdminAuth data={props} component={AdminDashboard} />
                 </Route>

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import loginReqAdmin from '../utils/adminLogin';
+import React, { useState, useContext } from 'react';
+import { AdminCtx } from '../Contexts/AdminCtx';
+import loginReqAdmin from '../fetch/adminLogin';
 
 
 const AdminSigninPage = (props) => {
-
+    const { adminAuth, setAdminAuth } = useContext(AdminCtx);
     const [err, setErr] = useState('');
 
     const email = React.createRef();
@@ -28,7 +29,8 @@ const AdminSigninPage = (props) => {
                 description :description,
                 imgUrl : imgUrl
             };
-            props.history.push('/admin');
+            sessionStorage.getItem('session') ? props.history.push('/admin') : <></>;
+            
         } else {
             setErr(response.message);
         }

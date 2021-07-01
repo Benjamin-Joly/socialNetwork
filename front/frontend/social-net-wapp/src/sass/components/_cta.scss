@@ -13,7 +13,8 @@
 }
 
 .cta{
-    background:black;
+    position: relative;
+    background:$darkColor;
     border: none;
     border-radius: 8px;
     padding:.6em;
@@ -22,6 +23,24 @@
     font-size:1.2em;
     font-weight: 400;
     cursor: pointer;
+    &::after{
+        //z-index:-1;
+        content:'';
+        position: absolute;
+        top:0;left:0;right:0;bottom:0;
+        mix-blend-mode:screen;
+        //width:36px;height:36px;
+        background:$medDarkColor;
+        border-radius:50%;
+        transform: scale(0) translateZ(0px);
+        opacity: 0;
+        transition: all ease-in-out .3s;
+    }
+    &:hover::after {
+        transform: scale(1) translateZ(0px);
+        opacity: 1;
+        border-radius:8px;
+    }
         &__gate{
             align-self:flex-end;
             justify-self: flex-end;
@@ -30,20 +49,37 @@
         &__message{
             position:absolute;
             top:.5em;right:-2em;
-            background: $constrastColor;
+            background: $animColor;
             border:none;
             border-radius:50%;
-            width:60px;height:60px;
+            width:70px;height:70px;
             cursor: pointer;
             @media(min-width: 1000px) {
                 right:0;
-                top:1.2em;
+                top:1.1em;
+            }
+            &::after{
+                z-index:0;
+                content:'';
+                position: absolute;
+                top:0;left:0;right:0;bottom:0;
+                mix-blend-mode:soft-light;
+                //width:36px;height:36px;
+                background:$darkColor;
+                border-radius:50%;
+                transform: scale(0) translateZ(0px);
+                opacity: 0;
+                transition: all ease-in-out .3s;
+            }
+            &:hover::after {
+                transform: scale(1) translateZ(0px);
+                opacity: 1;
             }
         }
         &__gif{
             position:absolute;
             z-index:2;
-            right:0.6em;top:3.5em;
+            right:.8em;top:4em;
             border-radius:50%;
             width:36px;height:36px;
             border:none;
@@ -51,33 +87,9 @@
             font-size:1.2em;
             font-weight:900;
             transition : all .3s ease-in-out;
-            mix-blend-mode:normal;
             cursor:pointer;
-            &::before{
-                content:'';
-                    position: absolute;
-                    top:0;left:0;
-                    width:36px;height:36px;
-                    background:$medColor;
-                    border-radius:50%;
-                    transform: scale(0) translateZ(0px);
-                    transition: all ease-in-out .1s;
-            }
-                &::after{
-                    z-index:-1;
-                    content:'';
-                    position: absolute;
-                    top:0;left:0;
-                    width:36px;height:36px;
-                    background:$animColor;
-                    border-radius:50%;
-                    transform: scale(0) translateZ(0px);
-                    opacity: 0;
-                    transition: all ease-in-out .1s;
-                }
-                &:hover::after {
-                    transform: scale(1) translateZ(0px);
-                    opacity: 1;
+                &:hover {
+                    transform: scale(1.2) translateZ(0px);
                 }
                 @media(max-width: 1000px) {
                     right:0;
@@ -87,21 +99,40 @@
         &__profile{
             background:$darkColor;
             border-radius:50%;
-            width:50px;
-            height:50px;
+            width:32px;
+            height:32px;
+            padding:4px;
             position:absolute;
+            top:96px;
             box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
             display:flex;
             justify-content: center;
             align-items: center;
             cursor:pointer;
+            &::after{
+                //z-index:-1;
+                content:'';
+                position: absolute;
+                top:0;left:0;right:0;bottom:0;
+                mix-blend-mode:screen;
+                //width:36px;height:36px;
+                background:$animColor;
+                border-radius:50%;
+                transform: scale(0) translateZ(0px);
+                opacity: 0;
+                transition: all ease-in-out .3s;
+            }
+            &:hover::after {
+                transform: scale(1) translateZ(0px);
+                opacity: 1;
+            }
                 &:nth-child(2){
-                    right:120px;
+                    right:126px;
                     top:20px;
                 }
                 @media(max-width: 1000px) {
-                    right:5px;
-                    top:64px;
+                    right:16px;
+                    top:58px;
                     &:nth-child(2){
                         right:64px;
                         top:5px;
@@ -111,6 +142,15 @@
         &__user-input{
             margin:0;
             margin-top:1em;
+        }
+        &__user-delete{
+            margin-left:1.3em;
+            background:$animColor;
+        }
+        &__gif-more{
+            background:$animColor;
+            margin:2em auto 2em auto;
+            padding:.5em 1em;
         }
 
 }

@@ -98,7 +98,6 @@
 
 #signup-form{
     display:flex;
-    min-width: 400px;
     min-height: 250px;
     justify-content: center;
         & label{
@@ -108,12 +107,15 @@
 
 #login-form{
     display:flex;
-    min-width: 400px;
     min-height: 150px;
     justify-content: center;
         & label{
             font-weight: 520;
         }
+        // @media(max-width:1000px){
+        //     width:100%;
+        //     background:blue;
+        // }
 }
 
 .labels{
@@ -123,6 +125,9 @@
     align-items: flex-end;
     margin:1.4em 0 1.4em 0;
     flex:1;
+    @media(max-width:1000px){
+        display:none;
+    }
 }
 
 .inputs{
@@ -131,12 +136,18 @@
     justify-content: space-between;
     margin:1em .5em 1em .5em;
     flex:2;
+    @media(max-width:1000px){
+        align-items: center;
+    }
         & input{
             font-family: $fontFamily;
             font-size: 1.2em;
             font-weight: 500;
             padding:.2em;
             border-radius: 8px;
+            @media(max-width:1000px){
+                width:80%;
+            }
             border:solid 1px #191919;
                 &::placeholder{
                     font-family: $fontFamily;

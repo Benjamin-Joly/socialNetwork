@@ -12,7 +12,7 @@ import TextInput from '../Components/TextInput';
 import Messages from '../Components/Messages';
 import Header from '../Components/Header';
 //utils
-import getImg from '../utils/getImg';
+import getImg from '../fetch/getImg';
 import arrayBufferToBase64 from '../utils/bufferTo64';
 
 

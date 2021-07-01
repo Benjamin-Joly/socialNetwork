@@ -16,11 +16,10 @@ export const AdminAuth = ({ component: Component, ...rest }) => {
         if(session){
             const decoded = jwt_decode(session);
             setAdminAuth(decoded.admin);
-        }else{
-            console.log('session not loaded');
-                setAdminAuth(false);
-        };
-    }, []);    
+            console.log('test decode', decoded.admin);
+            console.log('test auth', adminAuth);
+        }
+    },[]);    
   return adminAuth === true ?  <Route {...rest} render={
     props => <Component {...rest} {...props}/>
   } /> : <Redirect to={{ pathname: "/login/admin" }} />

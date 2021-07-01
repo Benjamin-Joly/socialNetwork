@@ -2,7 +2,7 @@
     &-preview{
         &__wrap{
             width:100%;
-            background:rgb(26, 26, 26);
+            background:$darkColor;
             height:auto;
             max-height:300px;
             border-radius: 8px;
@@ -34,7 +34,7 @@
             display:flex;
             justify-content: space-between;
             align-items:center;
-            background:rgb(65, 65, 65);
+            background:$constrastColor;
             margin:1em;
             border-radius: 8px;
             @media(max-width: 1000px) {

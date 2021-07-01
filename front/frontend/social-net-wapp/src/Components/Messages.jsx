@@ -19,6 +19,7 @@ const Messages = ({ content, history }) => {
     const messages = content;
     //socket.io block can be refactored (not DRY)
     const token = sessionStorage.getItem('session');
+    console.log(userDatas);
     if(!token){
         history.push('/login');
     }

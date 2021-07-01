@@ -2,17 +2,16 @@
     position: fixed;
     right:0;
     top:0;
-    z-index:10;
+    z-index:99;
 }
 
 .profile{
         &__pic{
-            background: $medDarkColor;
             width:150px;
             height:150px;
             border-bottom-left-radius: 100%;
-            border-bottom: solid $darkColor 10px;
-            border-left: solid $darkColor 10px;
+            border-bottom: solid $constrastColor  10px;
+            border-left: solid $constrastColor 10px;
             overflow:hidden;
                 @media(max-width:1000px){
                     width:80px;
@@ -43,6 +42,9 @@
         box-shadow: 0 0 50px rgba(26, 26, 26, 0.123);
         border-radius: 16px;
         max-height:100%;
+        @media(max-width:1000px){
+            flex-direction: column;
+        }
     }
     &__infos{
         position:relative;
@@ -53,6 +55,11 @@
         display:grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
+            @media(max-width:1000px){
+                grid-template-columns: repeat(1, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+                margin:1em auto 1em auto;
+            }
     }
     &__name{
         color:$lightColor;
@@ -74,19 +81,31 @@
         font-weight: 800;
         color:$constrastColor;
         margin-left:1em;
+        @media(max-width:1000px){
+            font-size:1.8em;
+        }
     }
     &__photo{
         width:300px;
         height:300px;
         border-radius: 50%;
         overflow:hidden;
+        @media(max-width:1000px){
+            max-width:150px;
+            max-height:150px;
+        }
     }
     &__input-wrap{
         margin:1em;
-        grid-row: 1/4;
         height:100%;
         display:flex;
         flex-direction:column;
+            @media(max-width:1000px){
+                grid-column: 1/2;
+            }
+            @media(min-width:1001px){
+                grid-row: 1/4;
+            }
     }
     &__input{
         margin-top:1.5em;
@@ -102,11 +121,18 @@
             & .cta:nth-child(1){
                 margin-right: 1em;
             }
+            @media(max-width:1000px){
+               margin-bottom:3em;
+            }
     }
     &__img{
         width:300px;
         height:300px;
         object-fit: cover;
+        @media(max-width:1000px){
+            max-width:150px;
+            max-height:150px;
+        }
     }
 }
 
@@ -116,6 +142,10 @@
     align-content: center;
     height:100%;
     margin-top:10em;
+        @media(max-width:1000px){
+            flex-direction: column;
+            margin-top:6em;
+        }
 }
 
 .log-out{

@@ -3,9 +3,9 @@ import React, { useState, useContext } from 'react';
 //ctx
 import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
-//utils
-import signupReq from '../utils/signup';
-import loginReq from '../utils/login';
+//fetch
+import signupReq from '../fetch/signup';
+import loginReq from '../fetch/login';
 
 const SignupPage = (props) => {
     //ctx

@@ -1,0 +1,27 @@
+<svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d1515a;
+      }
+
+      .cls-2 {
+        font-size: 36px;
+        fill: #295397;
+        font-family: CabinetGrotesk-Extrabold, Cabinet Grotesk;
+        font-weight: 800;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M150,41A109,109,0,1,1,41,150,109,109,0,0,1,150,41m0-36.66A145.69,145.69,0,0,0,93.29,284.2,145.69,145.69,0,0,0,206.71,15.8,144.69,144.69,0,0,0,150,4.34Z"/>
+  <text class="cls-2" transform="translate(65.92 70.48) rotate(-40.19)">G</text>
+  <text class="cls-2" transform="translate(85.41 54.74) rotate(-32.01)">l</text>
+  <text class="cls-2" transform="matrix(0.9, -0.43, 0.43, 0.9, 92.08, 50.14)">o</text>
+  <text class="cls-2" transform="translate(109.13 41.99) rotate(-15.64)">b</text>
+  <text class="cls-2" transform="translate(128.06 36.66) rotate(-5.96)">o</text>
+  <text class="cls-2" transform="matrix(1, 0.1, -0.1, 1, 146.56, 34.07)">m</text>
+  <text class="cls-2" transform="translate(175.51 37.45) rotate(17.39)">a</text>
+  <text class="cls-2" transform="translate(192.47 42.63) rotate(26.59)">n</text>
+  <text class="cls-2" transform="translate(209.55 51.5) rotate(33.4)">i</text>
+  <text class="cls-2" transform="translate(216.53 55.72) rotate(39.87)">a</text>
+</svg>

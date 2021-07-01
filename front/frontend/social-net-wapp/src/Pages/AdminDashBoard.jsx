@@ -1,10 +1,10 @@
-import { useContext, useState,useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { AdminCtx } from '../Contexts/AdminCtx';
 
-import getReq from '../utils/getReq';
-import getUsers from '../utils/getUsers';
-import deleteUser from '../utils/deleteUser';
-import deleteMessage from '../utils/deleteMessage';
+import getReq from '../fetch/getReq';
+import getUsers from '../fetch/getUsers';
+import deleteUser from '../fetch/deleteUser';
+import deleteMessage from '../fetch/deleteMessage';
 
 const AdminDashboard = (props) => {
     const { adminAuth, setAdminAuth } = useContext(AdminCtx);

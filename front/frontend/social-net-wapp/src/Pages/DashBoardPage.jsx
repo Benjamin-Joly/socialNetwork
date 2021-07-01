@@ -8,10 +8,11 @@ import Profile from '../Components/Profile';
 //vendors
 import ioClient from 'socket.io-client';
 //utils
-import getImg from '../utils/getImg';
+import getImg from '../fetch/getImg';
 import arrayBufferToBase64 from '../utils/bufferTo64';
-import sendImg from '../utils/sendImg'
-import updateProfile from '../utils/updateProfile';
+import sendImg from '../fetch/sendImg'
+import updateProfile from '../fetch/updateProfile';
+import deleteSelfReq from '../fetch/deleteSelfReq';
 
 
 
@@ -23,7 +24,6 @@ const DashboardPage = (props) => {
     const [user, setUser] = useState();
     const [ file, setFile ] = useState();
     //ref
-    const inputPic = React.createRef();
     const inputFirstName = React.createRef();
     const inputLastName = React.createRef()
     const inputPosition = React.createRef();
@@ -67,7 +67,6 @@ const DashboardPage = (props) => {
         const response = await getImg();
         const buff = response.file.fileData.data;
         const data = arrayBufferToBase64(buff);
-        //const data = buff.toString('base64');
         const profileObj = {
             fileAuthor : response.file.fileAuthor,
             fileData : data,
@@ -90,9 +89,7 @@ const DashboardPage = (props) => {
         const lastName = inputLastName.current.value;
         const position = inputPosition.current.value;
         const userId = userDatas.userId;
-        console.log(firstName, lastName, userId, position);
         const response = await updateProfile(firstName, lastName, userId, position);
-        console.log(response);
         if(socket){
             socket.emit('userUpdate', {
                 userId : response[0],
@@ -107,6 +104,8 @@ const DashboardPage = (props) => {
                 description : response[5],
                 imgUrl : 'imgUrl'
             };
+            const username = response[1] + ' '+ response[2];
+            sessionStorage.setItem('user', response[0]+ ' ' + username + ' '+ response[3] + ' '+ response[4] + ' '+ response[5] + ' '+ response[6]);
             setUserDatas(user);
         };
 
@@ -118,16 +117,22 @@ const DashboardPage = (props) => {
         e.preventDefault();
         updateProfileDatas();
         
-        console.log(userDatas);
     }
-    console.log(userDatas);
+
+    const deleteSelf = async () => {
+        const response = await deleteSelfReq();
+        if(response.valid === true){
+            sessionStorage.clear();
+            window.location.reload()
+        }
+    }
 
     return(
         <div className="dashboard__wrap">
             <Header history={props.history} />
             <Profile history={props.history} profile={profilePic} />
             <div className="user__wrap">
-                <h1 className="user__heading">Mon compte</h1>
+                <h1 className="user__heading">{userDatas.username}</h1>
                 <div className="user__infos">
                     <div className="user__input-wrap">
                         <label htmlFor='user-last-name' className="user__name">Nom</label>
@@ -149,6 +154,9 @@ const DashboardPage = (props) => {
                         <button className="cta cta__user-input" onClick={userUpdHandleClick}>modifier</button>
                     </div>
                 </div>
+                <div className="user-delete__wrap">
+                    <button id="user-delete" className="cta__user-delete cta" onClick={deleteSelf}>supprimer mon compte</button>
+                </div>
             </div>
             <div className="user__photo-wrap">
                 <div className="user__photo">
@@ -156,7 +164,7 @@ const DashboardPage = (props) => {
                 </div>
                 <form action="" method="post" encType="multipart/formdata">
                     <label htmlFor="profile__pic" className="cta cta__file-upload">Choisir une photo</label>
-                    <input className='disabled' type="file" name="profile__pic" id="profile__pic" ref={inputPic} onChange={sendPic}/>
+                    <input className='disabled' type="file" name="profile__pic" id="profile__pic" onChange={sendPic}/>
                     <button className="cta" onClick={picClickHandler}>valider</button>
                 </form>
             </div>

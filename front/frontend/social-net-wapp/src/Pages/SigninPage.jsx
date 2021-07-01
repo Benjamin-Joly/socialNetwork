@@ -5,7 +5,7 @@ import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
 import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
 //utils
-import loginReq from '../utils/login';
+import loginReq from '../fetch/login';
 import arrayBufferToBase64 from '../utils/bufferTo64';
 
 
@@ -30,7 +30,6 @@ const SigninPage = (props) => {
         if(response.valid === true){
             sessionStorage.setItem('session', response.session);
             const { userId, username, email, position, description, imgUrl } = response.user;
-            sessionStorage.setItem('user', userId+ ' ' + username + ' '+ email + ' '+ position + ' '+ description + ' '+ imgUrl);
             const user = {
                 userId : userId,
                 username : username,
@@ -39,6 +38,7 @@ const SigninPage = (props) => {
                 description :description,
                 imgUrl : 'imgUrl'
             };
+            sessionStorage.setItem('user', userId+ ' ' + username + ' '+ email + ' '+ position + ' '+ description + ' '+ imgUrl);
             if(response.file){
                 const buff = response.file.fileData.data;
                 const data = arrayBufferToBase64(buff);

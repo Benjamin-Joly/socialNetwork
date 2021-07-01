@@ -13,6 +13,8 @@ const TextInput = (props) => {
     //states
     const [ gifs, setGifs ] = useState([]);
     const [ isOpen, setOpen ] = useState(false);
+    const [ nextGifs, setNextGifs ] = useState(0);
+    const [ messageBody, setMessageBody ] = useState('');
     //ref
     const messRef = React.createRef();
     const searchRef = React.createRef();
@@ -21,7 +23,6 @@ const TextInput = (props) => {
     //socket.io block can be refactored (not DRY)
     const token = sessionStorage.getItem('session');
     const { userId, username, email, position, description, imgUrl }  = userDatas;
-    console.log(userDatas);
     if(!token){
         props.history.push('/login'); 
     };
@@ -61,13 +62,17 @@ const TextInput = (props) => {
                     username : username,
                     position : position,
                     messageGifId : `${target}`,
-                    gifUrl : fullGif
+                    gifUrl : fullGif,
+                    profilePicData : dataString
             });
         };
     };
-
-    const textResize = () => {
-        const text = document.getElementById('message__content');
+    const handleInputChanges = (e) => {
+        textResize();
+        setMessageBody(e.target.value);
+    }
+    const textResize = (e) => {
+        const text = e.target;
         text.style.height = 'auto';
         text.style.height = text.scrollHeight + 'px';
         if(text.value.length === 0){
@@ -77,9 +82,11 @@ const TextInput = (props) => {
 
     const getSomeGif = async (e) => {
         e.preventDefault();
+        //dotenv
         const apikey = 'X8RUJQXYVKTC';
         const lmt = 20;
         const searchTerm = searchRef.current.value;
+        sessionStorage.setItem('gifPosition', 0);
 
         const myHeader = {
             'Accept': 'application/json',
@@ -91,24 +98,30 @@ const TextInput = (props) => {
          if(response){
              const data = await response.json();
              data ? setGifs(data.results) : console.log('no datas');
+             const next = parseInt(data.next, 10);
+             console.log(parseInt(data.next, 10));
+             setNextGifs(next)
          }
     };
-
     const getNextGifs = async (e) => {
         e.preventDefault();
         const apikey = 'X8RUJQXYVKTC';
         const lmt = 20;
         const searchTerm = searchRef.current.value;
-
         const myHeader = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
           }
         const url = "https://g.tenor.com/v1/search?q=" + searchTerm + "&key=" +
-            apikey + "&limit=" + lmt + "&pos=" + lmt +"&locale" + "&media_filter";
+            apikey + "&limit=" + lmt + "&pos=" + nextGifs +"&locale" + "&media_filter";
          const response = await fetch(url, myHeader);
          if(response){
+             console.log(response);
             const data = await response.json();
+            console.log(data);
+            data ? setGifs(data.results) : console.log('no datas');
+            const next = parseInt(data.next, 10);
+            setNextGifs(next)
         }
     }
     const toggleGifMenu = (e) => {
@@ -135,7 +148,7 @@ const TextInput = (props) => {
                             <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullsize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
                         ))}
                         <div className="gif-more">
-                            <button className='cta gif-more__btn disabled' onClick={getNextGifs}>Plus</button>
+                            <button className='cta cta__gif-more' onClick={getNextGifs}>Plus</button>
                         </div>
                     </div>
                 </div>

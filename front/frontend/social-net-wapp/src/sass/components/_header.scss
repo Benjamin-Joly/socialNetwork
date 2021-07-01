@@ -1,30 +1,74 @@
 #header{
-    background:#191919;
+    background:$constrastColor;
     height:100vh;
     width:100%;
     max-width: 108px;
     position:fixed;
     top:0;left:0;
+    z-index: 98;
     display:flex;
     flex-direction:column;
     align-items: center;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
         @media(max-width:1000px){
-            background:none;
-            height:100px;
+            background:$medDarkColor;
+            height:80px;
+            max-width: none;
+            width:100%;
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
         }
 }
 
 #logo{
-    background:#ECECEC;
+    background-color: $darkColor;
     border-radius:50%;
     width:80px;
     height:80px;
     margin:1em auto 1em auto;
     cursor: pointer;
         @media(max-width:1000px){
-            width:50px;
-            height:50px;
+            width:56px;
+            height:56px;
+            position: absolute;
+            top:-4px;left:16px;
         }
+        &:hover + #curv-text .curv-text {
+            fill: $medDarkColor;
+        }
+    &:hover{
+        animation: rotate-logo 1.5s ease-in-out .2s infinite backwards;
+    }
 }
+
+.logo{
+    fill:$animColor;
+}
+
+.curv-text {
+    fill: $animColor;
+    transition : fill .5s ease-in-out;
+  }
+
+  .cls-2 {
+    font-size: 36px;
+    fill: $darkColor;
+    font-family: CabinetGrotesk-Extrabold, Cabinet Grotesk;
+    font-weight: 800;
+  }
+
+  #curv-text{
+      position:absolute;
+      top:6px;
+      width:100px;
+      height:100px;
+      pointer-events: none;
+
+      @media(max-width:1000px){
+        width:76px;
+        height:76px;
+        position: absolute;
+        top:2px;left:6px;
+    }
+  }

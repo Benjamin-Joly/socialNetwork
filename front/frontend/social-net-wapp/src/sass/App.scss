@@ -18,10 +18,12 @@ body, html{
     margin:0;
     padding:0;
     box-sizing: border-box;
-    background:#ECECEC;
+    background:$lightColor;
     font-family: $fontFamily;
     font-smooth:always;
-
+    &::-webkit-scrollbar{
+        display: none;
+    }
 }
 
 body{
@@ -40,7 +42,7 @@ body{
 }
 
 hr{
-    color:#191919;
+    color:$constrastColor;
     min-width: 100%;
     margin: 1em auto 3em auto;
 }
