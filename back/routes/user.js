@@ -11,6 +11,7 @@ router.post('/admin', rateLimit.userLogLimiter, userCtrl.loginAdmin);
 router.get('/valid', auth, userCtrl.validSession);
 router.get('/user', auth, userCtrl.getOneUser);
 router.put('/user/self', auth, userCtrl.updateSelf);
+router.delete('/user/self', auth, userCtrl.deleteSelf);
 
 router.get('/users', adminAuth, userCtrl.getUsers);
 router.delete('/admin/users', adminAuth, userCtrl.deleteUser);

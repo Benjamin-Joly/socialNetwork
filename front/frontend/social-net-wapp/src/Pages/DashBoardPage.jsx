@@ -160,7 +160,7 @@ const DashboardPage = (props) => {
             </div>
             <div className="user__photo-wrap">
                 <div className="user__photo">
-                    <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : ''} alt="Profile picture" className="user__img" />
+                    <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="user__img" />
                 </div>
                 <form action="" method="post" encType="multipart/formdata">
                     <label htmlFor="profile__pic" className="cta cta__file-upload">Choisir une photo</label>

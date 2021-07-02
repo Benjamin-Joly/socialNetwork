@@ -51,3 +51,11 @@ hr{
 .disabled {
     display: none;
 }
+
+.appearance{
+    animation : appearence 2s ease-in-out forwards;
+}
+
+.updown-anim{
+    animation : updown 2s ease-in-out forwards;
+}

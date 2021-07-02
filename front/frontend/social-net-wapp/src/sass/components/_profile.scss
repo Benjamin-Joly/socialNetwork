@@ -10,9 +10,11 @@
             width:150px;
             height:150px;
             border-bottom-left-radius: 100%;
-            border-bottom: solid $constrastColor  10px;
-            border-left: solid $constrastColor 10px;
+            border-bottom: solid $medDarkColor 48px;
+            border-left: solid $medDarkColor 36px;
             overflow:hidden;
+            //background-image: url('../../../img/icon-01.svg');
+            background:$medDarkColor;
                 @media(max-width:1000px){
                     width:80px;
                     height:80px;
@@ -90,6 +92,7 @@
         height:300px;
         border-radius: 50%;
         overflow:hidden;
+        background:$animColor;
         @media(max-width:1000px){
             max-width:150px;
             max-height:150px;

@@ -51,6 +51,8 @@ const SigninPage = (props) => {
                     idfile : response.file.idfile
                 };
                 setProfilePic(profileObj)
+            }else{
+                console.log('no profile pic');
             }
             setUserDatas(user);
             //console.log(userDatas);
@@ -66,6 +68,7 @@ const SigninPage = (props) => {
     return(
         <div className="gate">
             <div className="login__wrap">
+                <h1 className="login__heading">Connection</h1>
                 <form action="" method="post" id="login-form">
                     <div className="labels">
                         <label htmlFor="email">email :</label>
@@ -78,7 +81,7 @@ const SigninPage = (props) => {
                 </form>
                 <p className='error-message'>{err}</p>
                     <button id="login-btn" value="temporaire" className="cta cta__gate" onClick={logUser}>Se connecter</button>
-                    <p className="link__gate" onClick={goTo}>register</p>
+                    <p className="link__gate" onClick={goTo}>Créer un compte</p>
                 </div>
         </div>
     )

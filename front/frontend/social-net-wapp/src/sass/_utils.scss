@@ -12,3 +12,20 @@ $animColor : #d1515a;
     0%{transform: rotate(0deg);}
     100%{transform: rotate(360deg);}
 }
+
+@keyframes updown {
+    0%{transform: translateY(0px);}
+    50%{transform: translateY(5px);}
+    50%{transform: translateY(-5px);}
+}
+
+.exit, .exit-2 {
+    fill: none;
+    stroke: $lightColor;
+    stroke-linecap: round;
+    stroke-width: 2.32px;
+  }
+
+  .exit-2 {
+    stroke-linejoin: round;
+  }

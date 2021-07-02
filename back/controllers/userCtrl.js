@@ -270,6 +270,25 @@ exports.deleteUser = async (req, res, next) => {
       }
 };
 
+exports.deleteSelf = async (req, res, next) => {
+    try {
+        const token = req.headers.authorization;
+        const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
+                db.query(`DELETE FROM users WHERE userId IN (${decodedToken.userId})`,
+                    (error, result) => {
+                        if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
+                        else{
+                            res.status(200).send({
+                                message : 'User(s) suppressed !',
+                                valid : true
+                            });
+                        }
+                });
+            } catch {
+        res.status(401).send('Access denied, login to continue');
+      }
+};
+
 exports.updateSelf = async (req, res, next) => {
     try {
         const token = req.headers.authorization;

@@ -40,10 +40,17 @@ const io = require('socket.io')(server, {
   
   //handshake & greetings
   io.on('connection', (socket) => {
-    socket.send(`${socket.handshake.query.user} ready to go`);
+      socket.broadcast.emit( 'connection-data', {
+      message : `${socket.handshake.query.user} ready to go`,
+      connected : true,
+      userId : socket.handshake.query.userId
+     });
     //console.log(`${socket.handshake.query.user} connected`);
     socket.on('disconnect', () => {
-      //console.log(`${socket.handshake.query.user} disconnected`);
+      // socket.send({
+      //   message : `${socket.handshake.query.user} leave the room`,
+      //   connected : false
+      // });
     });
     socket.on('joinRoom', (data) => {
       //console.log(data);
@@ -80,16 +87,15 @@ const io = require('socket.io')(server, {
   })
 
   //Gif event
-
   io.on('connection', (socket) => {
     socket.on('newGif', (gif) => {
-      const { messageBody, userId, username, position, messageGifId, gifUrl } = gif;
-      //console.log(messageBody, userId, username, position, messageGifId, gifUrl);
+      const { messageBody, userId, username, position, messageGifId, gifUrl, profilePicData } = gif;
+      // console.log(messageBody, userId, username, position, messageGifId, gifUrl);
       let date = Date();
       date = date.toString();
       const isUp = false;
-      db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, messageGifId, gifUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
-      [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl],
+      db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, messageGifId, gifUrl, profilePicData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+      [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl, profilePicData],
       (error, result) => {
           if(error){socket.send(error)}
           //console.log(result);

@@ -56,6 +56,11 @@ const ChatroomPage = (props) => {
                     });
                     socket.on('message', data => {
                         setMessages([...data]);
+                        window.scroll({
+                            top: 0, 
+                            left: 0, 
+                            behavior: 'smooth'
+                          });
                     });
                     socket.on('notAllowed', data => {
                         console.log(data);
@@ -71,12 +76,16 @@ const ChatroomPage = (props) => {
                         setMessages(message);
                     });
                     socket.on('imgUpdate', message => {
-                        console.log('new');
+                        console.log('new', message);
                         setMessages(message);
                     });
                     socket.on('userUpdate', message => {
                         console.log('new');
                         setMessages(message);
+                    });
+                    socket.on('connection-data', data => {
+                        console.log('new user connected', data.message);
+                        //setMessages(message);
                     });
                     return () => {
                         socket.emit('leaveRoom', {

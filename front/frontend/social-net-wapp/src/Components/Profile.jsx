@@ -19,7 +19,7 @@ const Profile = ({ history }) => {
         <section id="profile__menu">
             <div className="profile__wrap">
                 <div className="profile__pic">
-                <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : ''} alt="Profile picture" className="profile__img" />
+                <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="profile__img" />
                 </div>
                 <div className="profile__settings cta__profile" onClick={goToDashB}>
                     <svg id="pic__account" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
@@ -30,10 +30,13 @@ const Profile = ({ history }) => {
                     </svg>
                 </div>
                 <div className="log-out cta__profile" onClick={logOut}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="22.505" height="25.768" viewBox="0 0 22.505 25.768">
-                    <g id="pic__exit" transform="translate(-1278.375 20.067)">
-                        <path d="M1294.226-8.547l7.456,7.362-7.456,7.362" transform="translate(-2.936 -2.597)" fill="none" stroke="#e9e9e9" strokeLinecap="round" strokeWidth="3"/>
-                        <path d="M1298.745-3.782h-18.87V-18.567" fill="none" stroke="#e9e9e9" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"/>
+                <svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
+                    <g>
+                        <g>
+                        <path class="exit" d="M18.28,9.31,24,15l-5.76,5.69"/>
+                        <path class="exit-2" d="M24,15H9.45"/>
+                        </g>
+                        <polyline class="exit-2" points="13.94 5 5.96 5 5.96 25 13.94 25"/>
                     </g>
                 </svg>
                 </div>

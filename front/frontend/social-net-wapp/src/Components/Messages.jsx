@@ -77,7 +77,7 @@ const Messages = ({ content, history }) => {
                 {messages.map((message) => (
                     <div key={message.messageId} id={message.messageId} className={mineOrTheirs(message)}>
                         <div className="message__author-wrap">
-                        <img src={message.profilePicData ? `${message.profilePicData}` : ''} alt="Profile picture" className="message__author-img" />
+                        <img src={message.profilePicData ? `${message.profilePicData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="message__author-img" />
                         <p className="message__author">{message.messageAuthorName}</p>
                     </div>
                         <p className="message__body">{message.messageBody}</p>
@@ -86,7 +86,7 @@ const Messages = ({ content, history }) => {
                     {message.messageAuthor === parseInt((userDatas.userId), 10) ? (
                         <div key={message.messageId} className="btn__wrap">
                             <button id={message.messageId} className="cta" onClick={deleteMessage}>supprimer</button>
-                            <p id={message.messageId} className="update__link" onClick={toggleUpdateInput}>update</p>
+                            <p id={message.messageId} className="update__link" onClick={toggleUpdateInput}>modifier</p>
                             <div key={message.messageId} className='update__wrap disabled'>
                                 <input  id={message.messageId} className='update__input' type="text" onInput={e => setUpdateBody(e.target.value)} ref={messRef} />
                                 <button id={message.messageId} className="update__btn cta" onClick={updateMessage}>modifier</button>

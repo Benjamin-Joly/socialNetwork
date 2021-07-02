@@ -20,7 +20,7 @@ const TextInput = (props) => {
     const searchRef = React.createRef();
     //component logic
     const dataString = `data:${profilePic ? profilePic.fileType : ''};base64,${profilePic ? profilePic.fileData : ''}`;
-    //socket.io block can be refactored (not DRY)
+    //socket.io block can be refactored (not DRY) __ config
     const token = sessionStorage.getItem('session');
     const { userId, username, email, position, description, imgUrl }  = userDatas;
     if(!token){
@@ -41,23 +41,22 @@ const TextInput = (props) => {
         e.preventDefault();
         if(socket){
             socket.emit('newMessage', {
-                    messageBody : messRef.current.value,
+                    messageBody : messageBody,
                     userId : userId,
                     username : username,
                     position : position,
                     profilePicData : dataString
             });
-        };
-        messRef.current.value = '';
+            setMessageBody('');
+        };       
     };
-
     const sendGif = (e) => {
         e.preventDefault();
         const target = parseInt((e.target.id), 10);
         const fullGif = e.target.dataset.fullsize;
         if(socket){
             socket.emit('newGif', {
-                    messageBody : `${username} has sent a Gif`,
+                    messageBody : ``,
                     userId : userId,
                     username : username,
                     position : position,
@@ -132,8 +131,8 @@ const TextInput = (props) => {
         <section id="text-area">
                 <div id="text-area__wrap">
                     <form action="" method="post" id="post-message">
-                        <textarea id="message__content" name="Message" className="message__text-area" onInput={textResize} ref={messRef} />
-                        <button id="message-submit" value="temporaire" className="cta__message" onClick={sendMessage}>
+                        <textarea id="message__content" name="Message" className="message__text-area" onInput={textResize} value={messageBody} onChange={e => setMessageBody(e.target.value)} placeholder={`${username}, exprime-toi je t'en prie`}/>
+                        <button type='submit' id="message-submit" value="temporaire" className="cta__message" onClick={sendMessage}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="33.938" height="30.003" viewBox="0 0 33.938 30.003">
                                 <path id='pic__send' d="M14.639,3.929a1.543,1.543,0,0,1,2.828,0L30.925,34.781a1.543,1.543,0,0,1-1.414,2.159L15.643,29.079,2.6,36.941a1.543,1.543,0,0,1-1.414-2.159Z" transform="translate(36.941 -1.052) rotate(90)"/>
                             </svg>

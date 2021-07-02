@@ -72,6 +72,7 @@ const SignupPage = (props) => {
     return(
         <div className="gate">
             <div className="signup__wrap">
+            <h1 className="login__heading">Inscription</h1>
             <form action="" method="post" id="signup-form">
                 <div className="labels">
                     <label htmlFor="first-name">Prénom :</label>
@@ -94,7 +95,7 @@ const SignupPage = (props) => {
             </form>
             <p className='error-message'>{err}</p>
             <button id="signup-btn" value="temporaire" className="cta cta__gate" onClick={registerUser}>S'inscrire</button>
-            <p className="link__gate" onClick={goTo}>login</p>
+            <p className="link__gate" onClick={goTo}>J'ai déjà un compte</p>
         </div>
         </div>
     )
