@@ -21,16 +21,14 @@ const DashboardPage = (props) => {
     const { userDatas, setUserDatas } = useContext(UserCtx);
     const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
     //states
-    const [user, setUser] = useState();
     const [ file, setFile ] = useState();
-    //ref
-    const inputFirstName = React.createRef();
-    const inputLastName = React.createRef()
-    const inputPosition = React.createRef();
+    const [ firstNameBody, setFirstNameBody ] = useState();
+    const [ lastNameBody, setLastNameBody ] = useState();
+    const [ positionBody, setPositionBody ] = useState();
 
     //socket.io block could be refactored. (not DRY)
     const token = sessionStorage.getItem('session');
-    const { userId, username, email, position, description, imgUrl }  = userDatas;
+    const { userId, username }  = userDatas;
     if(!token){
         props.history.push('/login'); 
     };
@@ -61,7 +59,6 @@ const DashboardPage = (props) => {
     const sendPic = (e) => {
         const img = e.target.files[0];
         setFile(img)
-        //
     }
     const getProfilePic = async () => {
         const response = await getImg();
@@ -85,9 +82,9 @@ const DashboardPage = (props) => {
         getProfilePic();
     }
     const updateProfileDatas = async (e) => {
-        const firstName = inputFirstName.current.value;
-        const lastName = inputLastName.current.value;
-        const position = inputPosition.current.value;
+        const firstName = firstNameBody;
+        const lastName = lastNameBody;
+        const position = positionBody;
         const userId = userDatas.userId;
         const response = await updateProfile(firstName, lastName, userId, position);
         if(socket){
@@ -108,9 +105,6 @@ const DashboardPage = (props) => {
             sessionStorage.setItem('user', response[0]+ ' ' + username + ' '+ response[3] + ' '+ response[4] + ' '+ response[5] + ' '+ response[6]);
             setUserDatas(user);
         };
-
-        //{userDatas ? userDatas.username : <></>}
-        //{userDatas ? userDatas.position : <></>}
     }
 
     const userUpdHandleClick = (e) => {
@@ -136,17 +130,17 @@ const DashboardPage = (props) => {
                 <div className="user__infos">
                     <div className="user__input-wrap">
                         <label htmlFor='user-last-name' className="user__name">Nom</label>
-                        <input className='user__input' type="text" id="user-last-name" ref={inputLastName} />
+                        <input className='user__input' type="text" id="user-last-name" value={lastNameBody} onChange={e => setLastNameBody(e.target.value)} />
                         <button className="cta cta__user-input" onClick={userUpdHandleClick}>modifier</button>
                     </div>
                     <div className="user__input-wrap">
                         <label htmlFor='user-first-name' className="user__name">Prénom</label>
-                        <input className='user__input' type="text" id="user-first-name" ref={inputFirstName} />
+                        <input className='user__input' type="text" id="user-first-name" value={firstNameBody} onChange={e => setFirstNameBody(e.target.value)} />
                         <button className="cta cta__user-input" onClick={userUpdHandleClick}>modifier</button>
                     </div>
                     <div className="user__input-wrap">
                         <label htmlFor='user__position' className="user__position">Fonction</label>
-                        <select name="" id="user-position" className='user__input' ref={inputPosition}>
+                        <select name="" id="user-position" className='user__input' value={positionBody} onChange={e => setPositionBody(e.target.value)}>
                             <option value="intern">Stagiaire</option>
                             <option value="employee">Collaborateur</option>
                             <option value="manager">Cadre</option>

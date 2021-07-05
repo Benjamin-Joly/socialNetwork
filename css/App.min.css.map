@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,IAAI,CAAE,IAAI,AAAA,CACN,MAAM,CAAC,CAAC,CACR,OAAO,CAAC,CAAC,CACT,UAAU,CAAE,UAAU,CACzB",
-    "sources": [
-        "../front/front__react/src/sass/App.scss"
-    ],
-    "names": [],
-    "file": "App.min.css"
-}

@@ -8,13 +8,9 @@ import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
 
 const Messages = ({ content, history }) => {
     //ctx
-    const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
     const { userDatas, setUserDatas } = useContext(UserCtx);
     //states
     const [updateBody, setUpdateBody] = useState('');
-    const [whosMess, setWhosMess] = useState('message__wrap')
-    //ref
-    const messRef = React.createRef();
     //component logic
     const messages = content;
     //socket.io block can be refactored (not DRY)
@@ -88,7 +84,7 @@ const Messages = ({ content, history }) => {
                             <button id={message.messageId} className="cta" onClick={deleteMessage}>supprimer</button>
                             <p id={message.messageId} className="update__link" onClick={toggleUpdateInput}>modifier</p>
                             <div key={message.messageId} className='update__wrap disabled'>
-                                <input  id={message.messageId} className='update__input' type="text" onInput={e => setUpdateBody(e.target.value)} ref={messRef} />
+                                <input  id={message.messageId} className='update__input' type="text" value={updateBody} onChange={e => setUpdateBody(e.target.value)}/>
                                 <button id={message.messageId} className="update__btn cta" onClick={updateMessage}>modifier</button>
                             </div>
                         </div>

@@ -13,20 +13,19 @@ const SignupPage = (props) => {
     const { userDatas, setUserDatas } = useContext(UserCtx);
     //state
     const [err, setErr] = useState('');
-    //ref
-    const firstName = React.createRef();
-    const lastName = React.createRef();
-    const position = React.createRef();
-    const email = React.createRef();
-    const password = React.createRef();
+    const [ emailBody, setEmailBody ] = useState('');
+    const [ pwBody, setPwBody ] = useState('');
+    const [ firstNameBody, setFirstNameBody ] = useState('');
+    const [ lastNameBody, setLastNameBody ] = useState('');
+    const [ positionBody, setPositionBody ] = useState('');
     //component logic
     const registerUser = async () => {
         const user = {
-            firstName : firstName.current.value,
-            lastName : lastName.current.value,
-            position : position.current.value,
-            email : email.current.value,
-            password : password.current.value
+            firstName : firstNameBody,
+            lastName : lastNameBody,
+            position : positionBody,
+            email : emailBody,
+            password : pwBody
         };
         const response = await signupReq(user);
         console.log(response);
@@ -82,15 +81,15 @@ const SignupPage = (props) => {
                     <label htmlFor="password">Mot de passe :</label>
                 </div>
                 <div className="inputs">
-                    <input type="text" id="first-name" placeholder="Prénom" className="signup__input" ref={firstName} />
-                    <input type="text" id="last-name" placeholder="Nom" className="signup__input" ref={lastName} />
-                    <select name="position" id="position" className="signup__input" ref={position}>
+                    <input type="text" id="first-name" placeholder="Prénom" className="signup__input" value={firstNameBody} onChange={e => setFirstNameBody(e.target.value)} />
+                    <input type="text" id="last-name" placeholder="Nom" className="signup__input" value={lastNameBody} onChange={e => setLastNameBody(e.target.value)} />
+                    <select name="position" id="position" className="signup__input" value={positionBody} onChange={e => setPositionBody(e.target.value)}>
                         <option value="intern">Stagiaire</option>
                         <option value="employee">Collaborateur</option>
                         <option value="manager">Cadre</option>
                     </select>
-                    <input type="text" id="email" placeholder="email valide" className="signup__input" ref={email} />
-                    <input type="text" id="password" placeholder="mot de passe" className="signup__input" ref={password} />
+                    <input type="text" id="email" placeholder="email valide" className="signup__input" value={emailBody} onChange={e => setEmailBody(e.target.value)} />
+                    <input type="text" id="password" placeholder="mot de passe" className="signup__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
                 </div>
             </form>
             <p className='error-message'>{err}</p>

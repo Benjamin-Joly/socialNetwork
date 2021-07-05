@@ -1,5 +1,6 @@
 //react
 import React, { useState, useContext } from 'react';
+import env from "react-dotenv";
 //vendors
 import ioClient from 'socket.io-client';
 //ctx
@@ -15,9 +16,7 @@ const TextInput = (props) => {
     const [ isOpen, setOpen ] = useState(false);
     const [ nextGifs, setNextGifs ] = useState(0);
     const [ messageBody, setMessageBody ] = useState('');
-    //ref
-    const messRef = React.createRef();
-    const searchRef = React.createRef();
+    const [ searchBody, setSearchBody ] = useState('');
     //component logic
     const dataString = `data:${profilePic ? profilePic.fileType : ''};base64,${profilePic ? profilePic.fileData : ''}`;
     //socket.io block can be refactored (not DRY) __ config
@@ -66,10 +65,6 @@ const TextInput = (props) => {
             });
         };
     };
-    const handleInputChanges = (e) => {
-        textResize();
-        setMessageBody(e.target.value);
-    }
     const textResize = (e) => {
         const text = e.target;
         text.style.height = 'auto';
@@ -82,9 +77,9 @@ const TextInput = (props) => {
     const getSomeGif = async (e) => {
         e.preventDefault();
         //dotenv
-        const apikey = 'X8RUJQXYVKTC';
+        const apikey = `${env.API_KEY}`;
         const lmt = 20;
-        const searchTerm = searchRef.current.value;
+        const searchTerm = searchBody;
         sessionStorage.setItem('gifPosition', 0);
 
         const myHeader = {
@@ -98,15 +93,14 @@ const TextInput = (props) => {
              const data = await response.json();
              data ? setGifs(data.results) : console.log('no datas');
              const next = parseInt(data.next, 10);
-             console.log(parseInt(data.next, 10));
              setNextGifs(next)
          }
     };
     const getNextGifs = async (e) => {
         e.preventDefault();
-        const apikey = 'X8RUJQXYVKTC';
+        const apikey = `${env.API_KEY}`;
         const lmt = 20;
-        const searchTerm = searchRef.current.value;
+        const searchTerm = searchBody;
         const myHeader = {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -127,6 +121,12 @@ const TextInput = (props) => {
         e.preventDefault();
         setOpen(!isOpen);
     }
+
+    const handleGifSend = (e) => {
+        sendGif(e);
+        toggleGifMenu(e);
+    }
+    console.log(searchBody);
     return (
         <section id="text-area">
                 <div id="text-area__wrap">
@@ -141,10 +141,10 @@ const TextInput = (props) => {
                     </form>
                     <div className={isOpen ? 'gif-preview__wrap' : 'gif-preview__wrap disabled'}>
                     <div className='gif-search__wrap'>
-                                <input className='gif-search__input' type="text" ref={searchRef} onInput={getSomeGif} placeholder='Search your Gif here' />
+                                <input className='gif-search__input' type="text" value={searchBody} onChange={e => setSearchBody(e.target.value)} onInput={getSomeGif} placeholder='Search your Gif here' />
                     </div>
                         {gifs.map((gif) => (
-                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullsize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={sendGif} />
+                            <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullsize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={handleGifSend}/>
                         ))}
                         <div className="gif-more">
                             <button className='cta cta__gif-more' onClick={getNextGifs}>Plus</button>

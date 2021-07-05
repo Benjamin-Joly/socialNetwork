@@ -16,15 +16,15 @@ const SigninPage = (props) => {
     const { userDatas, setUserDatas } = useContext(UserCtx);
     //state
     const [err, setErr] = useState('');
-    //ref
-    const email = React.createRef();
-    const password = React.createRef();
+    const [ emailBody, setEmailBody ] = useState('');
+    const [ pwBody, setPwBody ] = useState('');
+
     //component logic
     isAuth === true ? props.history.push('/chat') : <></>;
     const logUser = async () => {
         const user = {
-            email : email.current.value,
-            password : password.current.value
+            email : emailBody,
+            password : pwBody
         };
         const response = await loginReq(user);
         if(response.valid === true){
@@ -75,8 +75,8 @@ const SigninPage = (props) => {
                         <label htmlFor="password">Mot de passe :</label>
                     </div>
                     <div className="inputs">
-                        <input type="text" id="email" placeholder="email valide" className="login__input" ref={email} />
-                        <input type="text" id="password" placeholder="mot de passe" className="login__input" ref={password} />
+                        <input type="text" id="email" placeholder="email valide" className="login__input" value={emailBody} onChange={e => setEmailBody(e.target.value)} />
+                        <input type="text" id="password" placeholder="mot de passe" className="login__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
                     </div>
                 </form>
                 <p className='error-message'>{err}</p>

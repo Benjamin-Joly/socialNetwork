@@ -16,8 +16,6 @@ export const AdminAuth = ({ component: Component, ...rest }) => {
         if(session){
             const decoded = jwt_decode(session);
             setAdminAuth(decoded.admin);
-            console.log('test decode', decoded.admin);
-            console.log('test auth', adminAuth);
         }
     },[]);    
   return adminAuth === true ?  <Route {...rest} render={
