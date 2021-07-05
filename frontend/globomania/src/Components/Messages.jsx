@@ -11,6 +11,7 @@ const Messages = ({ content, history }) => {
     const { userDatas, setUserDatas } = useContext(UserCtx);
     //states
     const [updateBody, setUpdateBody] = useState('');
+    const [stringURL, setStringURL] = useState([])
     //component logic
     const messages = content;
     //socket.io block can be refactored (not DRY)
@@ -67,7 +68,6 @@ const Messages = ({ content, history }) => {
             target.className = 'update__wrap'
         }
     }
-
     return(
         <section className="messages__wrap">
                 {messages.map((message) => (

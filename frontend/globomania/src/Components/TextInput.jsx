@@ -126,7 +126,6 @@ const TextInput = (props) => {
         sendGif(e);
         toggleGifMenu(e);
     }
-    console.log(searchBody);
     return (
         <section id="text-area">
                 <div id="text-area__wrap">
@@ -141,7 +140,7 @@ const TextInput = (props) => {
                     </form>
                     <div className={isOpen ? 'gif-preview__wrap' : 'gif-preview__wrap disabled'}>
                     <div className='gif-search__wrap'>
-                                <input className='gif-search__input' type="text" value={searchBody} onChange={e => setSearchBody(e.target.value)} onInput={getSomeGif} placeholder='Search your Gif here' />
+                                <input className='gif-search__input' type="text" value={searchBody} onChange={e => setSearchBody(e.target.value)} onInput={getSomeGif} placeholder='cherche ton gif ici' />
                     </div>
                         {gifs.map((gif) => (
                             <img key={gif.id} id={gif.id} src={gif.media[0].nanogif.url} data-fullsize={gif.media[0].tinygif.url} alt="" className='gif-preview__gif' onClick={handleGifSend}/>

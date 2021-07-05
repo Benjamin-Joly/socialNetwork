@@ -92,7 +92,11 @@ const io = require('socket.io')(server, {
       const { messageBody, userId, username, position, messageGifId, gifUrl, profilePicData } = gif;
       // console.log(messageBody, userId, username, position, messageGifId, gifUrl);
       let date = Date();
+      const dateFormat = date.split(' ');
+      console.log(dateFormat);
+      date = dateFormat[1] + ' ' + dateFormat[2] + ' ' + dateFormat[3];
       date = date.toString();
+      console.log(date);
       const isUp = false;
       db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, messageGifId, gifUrl, profilePicData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
       [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl, profilePicData],
