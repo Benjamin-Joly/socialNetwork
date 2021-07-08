@@ -37,7 +37,7 @@ export const Auth = ({ component: Component, ...rest }) => {
             setUserDatas(user);
 
         }else{
-            console.log('no user');
+            console.error('no user');
         }
     }, [])
 

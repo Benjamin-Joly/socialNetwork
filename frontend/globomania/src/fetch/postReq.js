@@ -16,11 +16,11 @@ const postReq = async () => {
      }
      const response = await fetch('http://localhost:3000/messages', postOpt);
      if(!response){
-         console.log('no response to your get req :(');
+         console.error('no response to your get req :(');
      }
      const data = await response.text();
      if(!data){
-         console.log('no data recieved');
+         console.error('no data recieved');
      }
  };
 

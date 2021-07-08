@@ -19,13 +19,12 @@ const TextInput = (props) => {
     const [ searchBody, setSearchBody ] = useState('');
     //component logic
     const dataString = `data:${profilePic ? profilePic.fileType : ''};base64,${profilePic ? profilePic.fileData : ''}`;
-    //socket.io block can be refactored (not DRY) __ config
     const token = sessionStorage.getItem('session');
     const { userId, username, email, position, description, imgUrl }  = userDatas;
     if(!token){
         props.history.push('/login'); 
     };
-    const socket = ioClient('http://localhost:3000', {
+    const socket = ioClient(env.URL_SOCKET, {
         query : {
             user :  username,
             userId : userId
@@ -109,7 +108,6 @@ const TextInput = (props) => {
             apikey + "&limit=" + lmt + "&pos=" + nextGifs +"&locale" + "&media_filter";
          const response = await fetch(url, myHeader);
          if(response){
-             console.log(response);
             const data = await response.json();
             console.log(data);
             data ? setGifs(data.results) : console.log('no datas');

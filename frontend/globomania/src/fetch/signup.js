@@ -1,5 +1,4 @@
 const signupReq = async (user) => {
-    console.log(user);
     const { firstName, lastName, position, email, password } = user;
     const postOpt = {
         method:'POST',

@@ -4,6 +4,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthCtx } from '../Contexts/AuthCtx';
 import { UserCtx } from '../Contexts/UserCtx';
 import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
+import env from "react-dotenv";
 //vendors
 import ioClient from 'socket.io-client';
 //components
@@ -24,7 +25,6 @@ const ChatroomPage = (props) => {
     const { profilePic, setProfilePic } = useContext(ProfilePicCtx);
     //state
     const [ messages, setMessages ] = useState([]);
-    console.log(userDatas);
     //component logic
     const getProfilePic = async () => {
         const response = await getImg();
@@ -44,7 +44,7 @@ const ChatroomPage = (props) => {
     useEffect(() => {  
                     getProfilePic(); 
                     const { userId, username, email, position, description, imgUrl } = userDatas;
-                    const socket = ioClient('http://localhost:3000', {
+                    const socket = ioClient(env.URL_SOCKET, {
                         query : {
                             user :  username,
                             userId : userId
@@ -63,35 +63,20 @@ const ChatroomPage = (props) => {
                           });
                     });
                     socket.on('notAllowed', data => {
-                        console.log(data);
+                        console.error(data);
                     });
                     socket.on('disconnect', () => {
                         props.history.push('/login');
                     });
-                    socket.emit('joinRoom', {
-                        message : 'welcome message'
-                    });
                     socket.on('newMessage', message => {
-                        console.log('new');
                         setMessages(message);
                     });
                     socket.on('imgUpdate', message => {
-                        console.log('new', message);
                         setMessages(message);
                     });
                     socket.on('userUpdate', message => {
-                        console.log('new');
                         setMessages(message);
                     });
-                    socket.on('connection-data', data => {
-                        console.log('new user connected', data.message);
-                        //setMessages(message);
-                    });
-                    return () => {
-                        socket.emit('leaveRoom', {
-                            message : 'Byebye message'
-                        });
-                    }
     }, []);
    
     return(

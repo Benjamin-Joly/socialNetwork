@@ -59,3 +59,18 @@ hr{
 .updown-anim{
     animation : updown 2s ease-in-out forwards;
 }
+
+.validation{
+    position:relative;
+    background:$darkColor;
+    &::after{
+        content:'';
+        position:absolute;
+        inset:0;
+        background: $darkColor;
+        opacity: .8;
+    }
+    &__cta{
+        background: $animColor;
+    }
+}

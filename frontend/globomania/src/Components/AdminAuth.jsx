@@ -9,7 +9,6 @@ import { Redirect, Route } from 'react-router-dom';
 export const AdminAuth = ({ component: Component, ...rest }) => {
   //ctx
     const {adminAuth, setAdminAuth} = useContext(AdminCtx);
-    console.log('AdminAuth ', adminAuth);
   //component logic
      useEffect(() => {
         const session = sessionStorage.getItem("session");

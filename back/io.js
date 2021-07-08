@@ -23,12 +23,12 @@ const io = require('socket.io')(server, {
     const token = socket.handshake.auth.token;
     const decodedToken = jwt.verify(token, process.env.TOKENSECRET, (error) => {
       if(error){
-        console.log('error Auth');
+        console.error('error Auth');
         socket.disconnect();
       }else{  
         db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
         (error, result) => {
-          if(error){console.log(error)}
+          if(error){console.error(error)}
           else{
             socket.send(result);
           }
@@ -37,37 +37,15 @@ const io = require('socket.io')(server, {
       }
     });
   });
-  
-  //handshake & greetings
-  io.on('connection', (socket) => {
-      socket.broadcast.emit( 'connection-data', {
-      message : `${socket.handshake.query.user} ready to go`,
-      connected : true,
-      userId : socket.handshake.query.userId
-     });
-    //console.log(`${socket.handshake.query.user} connected`);
-    socket.on('disconnect', () => {
-      // socket.send({
-      //   message : `${socket.handshake.query.user} leave the room`,
-      //   connected : false
-      // });
-    });
-    socket.on('joinRoom', (data) => {
-      //console.log(data);
-    });
-    socket.on('leaveRoom', (data) => {
-      //console.log(data);
-      socket.send(`${socket.handshake.query.user} has left the room`);
-    });
-  });
 
   //New message event
   io.on('connection', (socket) => {
     socket.on('newMessage', (message) => {
       const {messageBody, userId, username, position, profilePicData} = message;
-      //console.log('message ', messageBody, userId, username, position);
       let date = Date();
-        date = date.toString();
+      const dateFormat = date.split(' ');
+      date = dateFormat[2] + ' ' + dateFormat[1] + ' ' + dateFormat[3];
+      date = date.toString();
         const isUp = false;
 
       db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, profilePicData) VALUES (?, ?, ?, ?, ?, ?, ?)`, 
@@ -76,7 +54,7 @@ const io = require('socket.io')(server, {
           if(error){socket.send(error)}
       db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
       (error, result) => {
-        if(error){console.log(error)}
+        if(error){console.error(error)}
         else{
           io.send(result);
         }
@@ -90,22 +68,18 @@ const io = require('socket.io')(server, {
   io.on('connection', (socket) => {
     socket.on('newGif', (gif) => {
       const { messageBody, userId, username, position, messageGifId, gifUrl, profilePicData } = gif;
-      // console.log(messageBody, userId, username, position, messageGifId, gifUrl);
       let date = Date();
       const dateFormat = date.split(' ');
-      console.log(dateFormat);
-      date = dateFormat[1] + ' ' + dateFormat[2] + ' ' + dateFormat[3];
+      date = dateFormat[2] + ' ' + dateFormat[1] + ' ' + dateFormat[3];
       date = date.toString();
-      console.log(date);
       const isUp = false;
       db.query(`INSERT INTO messages (messageBody, messageAuthor, messageAuthorName, messageAuthorPosition, messageDate, isUp, messageGifId, gifUrl, profilePicData) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
       [messageBody, userId, username, position, date, isUp, messageGifId, gifUrl, profilePicData],
       (error, result) => {
           if(error){socket.send(error)}
-          //console.log(result);
       db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
       (error, result) => {
-        if(error){console.log(error)}
+        if(error){console.error(error)}
         else{
           io.send(result);
         }
@@ -120,11 +94,11 @@ io.on('connection', (socket) => {
     const messId = message.btnId;
     db.query(`DELETE FROM messages WHERE messageId = ${messId}`,
     (error) => {
-        if(error){console.log('couldn\'t delete')};
+        if(error){console.error('couldn\'t delete')};
     });
     db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
     (error, result) => {
-      if(error){console.log(error)}
+      if(error){console.error(error)}
       else{
         io.send(result);
       }
@@ -135,9 +109,7 @@ io.on('connection', (socket) => {
 //Update event
 io.on('connection', (socket) => {
   socket.on('update', (message) => {
-    //console.log('update ', message);
     const messBody = message.messageBody;
-    //console.log(messBody);
     const messId = message.btnId;
     db.query(`UPDATE messages SET messageBody = "${messBody}" WHERE messageId = ${messId}`,
         (error, result) => {
@@ -145,7 +117,7 @@ io.on('connection', (socket) => {
         });
     db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
     (error, result) => {
-        if(error){console.log(error)}
+        if(error){console.error(error)}
         else{
           io.send(result);
         }
@@ -157,10 +129,8 @@ io.on('connection', (socket) => {
 
 io.on('connection', (socket) => {
   socket.on('imgUpdate', (image) => {
-    console.log('update image');
     const imageData = image.fileData;
     const userId = image.author;
-    console.log(imageData ? console.log('imgdata ok') : console.log('imgData notOK'));
     db.query(`UPDATE messages SET profilePicData = "${imageData}" WHERE messageAuthor = ${userId}`,
         (error, result) => {
             if(error){socket.send(error)};
@@ -168,7 +138,7 @@ io.on('connection', (socket) => {
         });
     db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
     (error, result) => {
-        if(error){console.log(error)}
+        if(error){console.error(error)}
         else{
           io.send(result);
         }
@@ -178,7 +148,6 @@ io.on('connection', (socket) => {
 
 io.on('connection', (socket) => {
   socket.on('userUpdate', (author) => {
-    console.log('auteur', author);
     db.query(`UPDATE messages SET messageAuthorName = "${author.username}", messageAuthorPosition = "${author.position}" WHERE messageAuthor = ${author.userId}`,
         (error, result) => {
             if(error){socket.send(error)};
@@ -186,7 +155,7 @@ io.on('connection', (socket) => {
         });
     db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
     (error, result) => {
-        if(error){console.log(error)}
+        if(error){console.error(error)}
         else{
           io.send(result);
         }
@@ -197,7 +166,7 @@ io.on('connection', (socket) => {
 
 //Error handle
   io.on('error', (socket) => {
-    console.log('error occurred');
+    console.error('error occurred');
   });
 
   module.exports = io;

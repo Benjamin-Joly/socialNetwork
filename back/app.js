@@ -5,8 +5,6 @@ const userRoutes = require('./routes/user');
 const messageRoutes = require('./routes/messages');
 const multerRoutes = require('./routes/multer');
 const helmet = require("helmet");
-const path = require('path');
-const multer = require('multer');
 dotenv.config();
 
 app.use(express.json());

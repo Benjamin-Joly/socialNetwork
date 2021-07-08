@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import { AdminCtx } from '../Contexts/AdminCtx';
 import loginReqAdmin from '../fetch/adminLogin';
 
-
 const AdminSigninPage = (props) => {
     const { adminAuth, setAdminAuth } = useContext(AdminCtx);
     const [err, setErr] = useState('');
@@ -16,7 +15,6 @@ const AdminSigninPage = (props) => {
             password : password.current.value
         };
         const response = await loginReqAdmin(user);
-        //console.log(response);
         if(response.admin === true){
             sessionStorage.setItem('session', response.session);
             const { userId, username, email, position, description, imgUrl } = response.user;

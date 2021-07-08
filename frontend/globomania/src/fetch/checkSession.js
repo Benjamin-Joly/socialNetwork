@@ -10,9 +10,7 @@ const checkSession = async (token) => {
          }
          const response = await fetch('http://localhost:3000/valid', postOpt);
          const data = await response.json();
-         console.log(data);
          if(data === true){
-             console.log('ok');
              return true;
          }else{
              return false;

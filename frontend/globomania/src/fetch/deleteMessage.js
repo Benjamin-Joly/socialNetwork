@@ -1,5 +1,4 @@
 const deleteMessage = async (array) => {
-    console.log(array);
     const token = sessionStorage.session;
     const myHeader = {
         'Accept': 'application/json',

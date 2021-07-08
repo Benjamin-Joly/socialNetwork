@@ -1,9 +1,7 @@
-const express = require('express');
- const mysql = require('mysql');
+const mysql = require('mysql');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
 dotenv.config();
  
 const db = mysql.createConnection({
@@ -30,7 +28,7 @@ exports.createUser = async (req, res, next) => {
         const {firstName, lastName, email, position, password} = req.body;
         const salt = 10;
         const hash = await bcrypt.hash(password, salt);
-        if(!hash){console.log('smth went wrong')};
+        if(!hash){console.error('smth went wrong with pw #')};
         if(alphaNumValidation(firstName) && alphaNumValidation(lastName) && emailValidation(email)){
             db.query(`INSERT INTO users (firstName, lastName, email, position, password) VALUES (?, ?, ?, ?, ?)`, 
             [firstName, lastName, email, position, hash],
@@ -40,13 +38,13 @@ exports.createUser = async (req, res, next) => {
                    valid : false
                 })}
                 else{res.status(200).send({
-                    message : `user ${firstName+' '+lastName} correctly created`,
+                    message : `utilisateur ${firstName+' '+lastName} créé`,
                     valid : true
                 })}
             });
          } else{
              res.status(400).send({
-                message : 'Unvalid entry, make sure your email is correct and don\'t use any reserved characters',
+                message : 'Entrée(s) invalide(s) veillez à renseigner un email valide et de n\'utiliser que des caractères alphanumériques',
                 valid : false
             });
          }
@@ -70,14 +68,14 @@ exports.loginUser = (req, res, next) => {
                 const userLogs = result[0];
 
                 if (!userLogs) { res.status(404).send({
-                    message : 'wrong ID mate, check your papers',
+                    message : 'Informations erronées',
                     valid : false
                 }); 
                 } else {
                     const validLogs = await bcrypt.compare(password, userLogs.password);
                     if (!validLogs) { 
                         res.status(401).header('response', false).send({
-                            message : 'wrong ID mate, check your papers',
+                            message : 'Informations erronées',
                             valid : false
                         }); 
                     }else{
@@ -93,9 +91,8 @@ exports.loginUser = (req, res, next) => {
                         );
                         db.query(`SELECT * FROM profilepic WHERE fileAuthor =${userId}`, 
                             (error, result) => {
-                            if(error){console.log(error)}
+                            if(error){console.error(error)}
                             else{
-                                //console.log(result);
                                 const file = result[0];
                                 res.status(200).header('Authorization', token).send({
                                     session : token,
@@ -117,7 +114,7 @@ exports.loginUser = (req, res, next) => {
             });
         }else{
             res.status(400).send({
-                message : 'fields must be correctly filled',
+                message : 'Des champs ne sont pas renseignés',
                 valid : false
             });
         }
@@ -137,12 +134,12 @@ exports.loginAdmin = (req, res, next) => {
             const admin = db.query(`SELECT * FROM adminaccounts WHERE email IN (?)`,
             email,
             async (error, result) => {
-                if (error) { console.log('Smth went wrong when querying DB ' + error); }
+                if (error) { console.error('Smth went wrong when querying DB ' + error); }
 
                 const userLogs = result[0];
 
                 if (!userLogs) { res.status(404).send({
-                    message : 'wrong ID mate, check your papers',
+                    message : 'Informations erronées',
                     valid : false,
                     admin : false
                 }); 
@@ -150,7 +147,7 @@ exports.loginAdmin = (req, res, next) => {
                     const validLogs = await bcrypt.compare(password, userLogs.password);
                     if (!validLogs) { 
                         res.status(401).header('response', false).send({
-                            message : 'wrong ID mate, check your papers',
+                            message : 'Informations erronées',
                             valid : false,
                             admin : false
                         }); 
@@ -184,7 +181,7 @@ exports.loginAdmin = (req, res, next) => {
             });
         }else{
             res.status(400).send({
-                message : 'fields must be correctly filled',
+                message : 'Des champs ne sont pas renseignés',
                 valid : false,
                 admin :false
             });
@@ -205,7 +202,7 @@ exports.validSession = (req, res, next) => {
         //console.log('my req ', req);
         next();
     }else{
-        res.status(404).send('nothing for you mate');
+        res.status(404).send('Session invalide');
     }
 }
 
@@ -224,7 +221,7 @@ exports.getOneUser = async (req, res, next) => {
                     res.status(200).send([userId, firstName, lastName, email, position, description]);
             });
       } catch {
-        res.status(401).send('Access denied, login to continue');
+        res.status(401).send('Accès refusé connectez-vous pour continuer');
       }
 }
 
@@ -232,17 +229,13 @@ exports.getUsers = async (req, res, next) => {
     try {
         const token = req.headers.authorization;
         const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
-        const userId = decodedToken.userId;
             const user = db.query(`SELECT * FROM users`,
             (err, result) => {
-                if (err) { console.log('Smth went wrong when querying DB ' + error); }
-                    const userDatas = result;
-                    //const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                if (err) { console.error('Smth went wrong when querying DB ' + error); }
                     res.status(200).send(result);
-                    //[userId, firstName, lastName, email, position, description]
             });
       } catch {
-        res.status(401).send('Access denied, login to continue');
+        res.status(401).send('Accès refusé connectez-vous en Admin pour continuer');
       }
 }
 
@@ -262,11 +255,11 @@ exports.deleteUser = async (req, res, next) => {
                         }
                 });
             }else{
-                res.status(401).send('Access denied, ask for admin rights to continue');
+                res.status(401).send('Accès refusé connectez-vous en Admin pour continuer');
             }
             
       } catch {
-        res.status(401).send('Access denied, login to continue');
+        res.status(401).send('Accès refusé connectez-vous en Admin pour continuer');
       }
 };
 
@@ -285,7 +278,7 @@ exports.deleteSelf = async (req, res, next) => {
                         }
                 });
             } catch {
-        res.status(401).send('Access denied, login to continue');
+        res.status(401).send('Acces refusé connectez-vous pour continuer');
       }
 };
 
@@ -295,25 +288,36 @@ exports.updateSelf = async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.TOKENSECRET);
         const data = req.body;
         let { firstName, lastName, userId, position } = data;
-        console.log('data block ', data);
         firstName ? console.log('fN defined') : firstName = decodedToken.username.split(' ')[0];
         lastName ? console.log('lastName defined') : lastName = decodedToken.username.split(' ')[1];
         userId ? console.log('userId defined') : userId = decodedToken.userId;
-        db.query(`UPDATE users SET firstName = "${firstName}", lastName = "${lastName}", position="${position}" WHERE userId = ${userId}`,
-        (error, result) => {
-            if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
-            else{
-                db.query(`SELECT * FROM users WHERE userId IN (?)`,
-            userId,
-            (err, result) => {
-                if (err) { console.log('Smth went wrong when querying DB ' + error); }
-                    const userDatas = result[0];
-                    const { userId, firstName, lastName, email, position, hash, description } = userDatas
-                    
-                    res.status(200).send([userId, firstName, lastName, email, position, description]);
+        if(/^[A-Za-zÀ-ÖØ-öø-ÿ0-9- ]*$/.test(firstName) && /^[A-Za-zÀ-ÖØ-öø-ÿ0-9- ]*$/.test(lastName) && /^[A-Za-zÀ-ÖØ-öø-ÿ0-9- ]*$/.test(position)){
+            db.query(`UPDATE users SET firstName = "${firstName}", lastName = "${lastName}", position="${position}" WHERE userId = ${userId}`,
+            (error, result) => {
+                if(error){res.status(404).send(error.errno + '__' + error.sqlMessage)}
+                else{
+                    db.query(`SELECT * FROM users WHERE userId IN (?)`,
+                userId,
+                (err, result) => {
+                    if (err) { console.error('Smth went wrong when querying DB ' + error); }
+                        const userDatas = result[0];
+                        const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                        
+                        res.status(200).send([userId, firstName, lastName, email, position, description]);
+                });
+                }
             });
-            }
-        });
+        }else{
+            db.query(`SELECT * FROM users WHERE userId IN (?)`,
+                userId,
+                (err, result) => {
+                    if (err) { console.error('Smth went wrong when querying DB ' + error); }
+                        const userDatas = result[0];
+                        const { userId, firstName, lastName, email, position, hash, description } = userDatas
+                        
+                        res.status(200).send([userId, firstName, lastName, email, position, description]);
+                });
+        }  
     } catch (error) {
         console.log(error);
         res.status(400).send(error)

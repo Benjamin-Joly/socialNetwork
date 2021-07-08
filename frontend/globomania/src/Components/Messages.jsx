@@ -1,5 +1,6 @@
 //react
 import React, { useState, useContext } from 'react';
+import env from 'react-dotenv';
 //vendors
 import ioClient from 'socket.io-client';
 //ctx
@@ -14,13 +15,12 @@ const Messages = ({ content, history }) => {
     const [stringURL, setStringURL] = useState([])
     //component logic
     const messages = content;
-    //socket.io block can be refactored (not DRY)
     const token = sessionStorage.getItem('session');
     console.log(userDatas);
     if(!token){
         history.push('/login');
     }
-    const socket = ioClient('http://localhost:3000', {
+    const socket = ioClient(env.URL_SOCKET, {
         query : {
             user :  userDatas.username,
             userId : userDatas.userId

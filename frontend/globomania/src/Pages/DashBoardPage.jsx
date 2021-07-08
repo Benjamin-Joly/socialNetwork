@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserCtx } from '../Contexts/UserCtx';
 import { ProfilePicCtx } from '../Contexts/ProfilePicCtx';
+import env from "react-dotenv";
 //Components
 import Header from '../Components/Header';
 import Profile from '../Components/Profile';
@@ -25,14 +26,16 @@ const DashboardPage = (props) => {
     const [ firstNameBody, setFirstNameBody ] = useState();
     const [ lastNameBody, setLastNameBody ] = useState();
     const [ positionBody, setPositionBody ] = useState();
+    const [ imgStyle, setImgStyle ] = useState("user__photo");
+    const [ ctaStyle, setCtaStyle ] = useState("cta");
 
-    //socket.io block could be refactored. (not DRY)
+
     const token = sessionStorage.getItem('session');
     const { userId, username }  = userDatas;
     if(!token){
         props.history.push('/login'); 
     };
-    const socket = ioClient('http://localhost:3000', {
+    const socket = ioClient(env.URL_SOCKET, {
         query : {
             user :  username,
             userId : userId
@@ -58,7 +61,9 @@ const DashboardPage = (props) => {
     };
     const sendPic = (e) => {
         const img = e.target.files[0];
-        setFile(img)
+        setFile(img);
+        setImgStyle("user__photo validation");
+        setCtaStyle("cta validation__cta")
     }
     const getProfilePic = async () => {
         const response = await getImg();
@@ -80,6 +85,8 @@ const DashboardPage = (props) => {
         formData.append('image', file);
         const send = await sendImg(formData);
         getProfilePic();
+        setImgStyle("user__photo");
+        setCtaStyle("cta")
     }
     const updateProfileDatas = async (e) => {
         const firstName = firstNameBody;
@@ -153,13 +160,13 @@ const DashboardPage = (props) => {
                 </div>
             </div>
             <div className="user__photo-wrap">
-                <div className="user__photo">
+                <div className={imgStyle}>
                     <img src={profilePic ? `data:${profilePic.fileType};base64,${profilePic.fileData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="user__img" />
                 </div>
                 <form action="" method="post" encType="multipart/formdata">
                     <label htmlFor="profile__pic" className="cta cta__file-upload">Choisir une photo</label>
                     <input className='disabled' type="file" name="profile__pic" id="profile__pic" onChange={sendPic}/>
-                    <button className="cta" onClick={picClickHandler}>valider</button>
+                    <button className={ctaStyle} onClick={picClickHandler}>valider</button>
                 </form>
             </div>
         </div>

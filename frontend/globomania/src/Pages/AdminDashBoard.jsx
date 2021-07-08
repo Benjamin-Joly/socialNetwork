@@ -10,8 +10,8 @@ const AdminDashboard = (props) => {
     const { adminAuth, setAdminAuth } = useContext(AdminCtx);
     const [ messages, setMessages ] = useState([]);
     const [ users, setUsers ] = useState();
-    console.log(adminAuth);  
     adminAuth === true ? <></> : props.history.push('/login/admin');
+    //renommer
     const getEverything = async () => {
         const messagesArr = await getReq();
         const usersArr = await getUsers();
@@ -25,12 +25,6 @@ const AdminDashboard = (props) => {
     useEffect(() => {
         getEverything();
     }, []);
-
-    const selectValues = (e) => {
-        const target = e.target;
-        console.log(target.checked);   
-
-    }
     const getUsersChecked = () => {
         const inputs = Array.from(document.querySelectorAll('.admin__user-input'));
         const checked = inputs.filter(input => input.checked === true);
@@ -45,12 +39,10 @@ const AdminDashboard = (props) => {
     }
     const handleClickDeleteUsers = async () => {
         const query = getUsersChecked();
-        console.log(query);
         const response = await deleteUser(query);
     }
     const handleClickDeleteMessages = async () => {
         const query = getMessagesChecked();
-        console.log(query);
         const response = await deleteMessage(query);
     }
 
@@ -70,7 +62,6 @@ const AdminDashboard = (props) => {
                 </form>
                 <div className="admin__btn-wrap">
                     <button className="admin__delete-btn cta cta__admin" onClick={handleClickDeleteUsers}>Supprimer</button>
-                    {/* <button className="admin__underline-btn cta cta__admin">Surligner</button> */}
                 </div>
                 <hr />
                 <form action="post" className="admin__message-form">
@@ -84,7 +75,6 @@ const AdminDashboard = (props) => {
                 </form>
                 <div className="admin__btn-wrap">
                     <button className="admin__delete-btn cta cta__admin" onClick={handleClickDeleteMessages}>Supprimer</button>
-                    {/* <button className="admin__underline-btn cta cta__admin">Surligner</button> */}
                 </div>
             </div>
         </div>
