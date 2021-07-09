@@ -46,7 +46,8 @@ const DashboardPage = (props) => {
         forceNew : true
     });
     socket.on('disconnect', () => {
-        props.history.push('/login');
+        sessionStorage.clear();
+        window.location.reload();
     });
     
 

@@ -42,7 +42,7 @@ function App(props) {
                 <Route path="/chat">
                   <Auth data={props} component={ChatRoomPage} />
                 </Route>
-                </ProfilePicCtx.Provider>
+              </ProfilePicCtx.Provider>
           <AdminCtx.Provider value={{adminAuth, setAdminAuth}}>
                 <Route exact path='/login/admin' component={AdminSigninPage}/>
                 <Route path="/admin">

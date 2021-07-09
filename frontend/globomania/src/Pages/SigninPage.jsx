@@ -76,7 +76,7 @@ const SigninPage = (props) => {
                     </div>
                     <div className="inputs">
                         <input type="text" id="email" placeholder="email valide" className="login__input" value={emailBody} onChange={e => setEmailBody(e.target.value)} />
-                        <input type="text" id="password" placeholder="mot de passe" className="login__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
+                        <input type="password" id="password" placeholder="mot de passe" className="login__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
                     </div>
                 </form>
                 <p className='error-message'>{err}</p>

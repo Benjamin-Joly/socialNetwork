@@ -199,7 +199,6 @@ exports.validSession = (req, res, next) => {
     //tool for auth debug;
     if(res){
         res.status(200).send(true);
-        //console.log('my req ', req);
         next();
     }else{
         res.status(404).send('Session invalide');

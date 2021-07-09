@@ -66,7 +66,8 @@ const ChatroomPage = (props) => {
                         console.error(data);
                     });
                     socket.on('disconnect', () => {
-                        props.history.push('/login');
+                        sessionStorage.clear();
+                        window.location.reload();
                     });
                     socket.on('newMessage', message => {
                         setMessages(message);
