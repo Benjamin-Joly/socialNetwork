@@ -89,7 +89,7 @@ const SignupPage = (props) => {
                         <option value="manager">Cadre</option>
                     </select>
                     <input type="text" id="email" placeholder="email valide" className="signup__input" value={emailBody} onChange={e => setEmailBody(e.target.value)} />
-                    <input type="text" id="password" placeholder="mot de passe" className="signup__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
+                    <input type="password" id="password" placeholder="mot de passe" className="signup__input" value={pwBody} onChange={e => setPwBody(e.target.value)} />
                 </div>
             </form>
             <p className='error-message'>{err}</p>
