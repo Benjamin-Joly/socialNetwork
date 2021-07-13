@@ -24,7 +24,7 @@ const TextInput = (props) => {
     if(!token){
         props.history.push('/login'); 
     };
-    const socket = ioClient(env.URL_SOCKET, {
+    const socket = ioClient('http://localhost:3000', {
         query : {
             user :  username,
             userId : userId
