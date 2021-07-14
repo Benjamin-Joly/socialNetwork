@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const multer = require('multer');
 dotenv.config();
 
 
@@ -19,18 +20,17 @@ exports.uploadFile = async (req, res, next) => {
     const { userId, username, position } = decodedToken;
     const { fieldname, originalname, encoding, mimetype, destination, filename } = req.file;
     const fileData = fs.readFileSync(__dirname + "/../img/" + filename);
-    
     db.query(`REPLACE INTO profilepic (fileData, fileName, fileAuthor, fileType) VALUES (?, ?, ?, ?)`, 
         [fileData, filename, userId, mimetype],
         (error, result) => {
             if(error){res.status(400).send(error.errno + '__' + error.sqlMessage)}
             else{ 
               res.status(201).send('file registered');
-              fs.unlinkSync(__dirname + "/../img/" + filename);
             }
+            fs.unlinkSync(__dirname + "/../img/" + filename);
         });
     } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send('error ?', error);
   }
 }
 

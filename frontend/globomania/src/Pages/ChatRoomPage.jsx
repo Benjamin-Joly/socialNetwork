@@ -56,11 +56,6 @@ const ChatroomPage = (props) => {
                     });
                     socket.on('message', data => {
                         setMessages([...data]);
-                        window.scroll({
-                            top: 0, 
-                            left: 0, 
-                            behavior: 'smooth'
-                          });
                     });
                     socket.on('notAllowed', data => {
                         console.error(data);
@@ -71,6 +66,11 @@ const ChatroomPage = (props) => {
                     });
                     socket.on('newMessage', message => {
                         setMessages(message);
+                        window.scroll({
+                            top: 0, 
+                            left: 0, 
+                            behavior: 'smooth'
+                          });
                     });
                     socket.on('imgUpdate', message => {
                         setMessages(message);

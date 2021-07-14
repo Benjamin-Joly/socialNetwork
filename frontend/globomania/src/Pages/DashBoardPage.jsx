@@ -28,6 +28,7 @@ const DashboardPage = (props) => {
     const [ positionBody, setPositionBody ] = useState();
     const [ imgStyle, setImgStyle ] = useState("user__photo");
     const [ ctaStyle, setCtaStyle ] = useState("cta");
+    const [ errorMess, setErrorMess ] = useState("");
 
 
     const token = sessionStorage.getItem('session');
@@ -62,29 +63,34 @@ const DashboardPage = (props) => {
     };
     const sendPic = (e) => {
         const img = e.target.files[0];
+        console.log(img);
         setFile(img);
+        setErrorMess('');
         setImgStyle("user__photo validation");
         setCtaStyle("cta validation__cta")
     }
     const getProfilePic = async () => {
         const response = await getImg();
-        const buff = response.file.fileData.data;
-        const data = arrayBufferToBase64(buff);
-        const profileObj = {
-            fileAuthor : response.file.fileAuthor,
-            fileData : data,
-            fileName : response.file.fileName,
-            fileType : response.file.fileType,
-            idfile : response.file.idfile
-        };
-    setProfilePic(profileObj);
-    profilePicUpdate(response.file.fileType, data);
+        if(response.file){
+            const buff = response.file.fileData.data;
+            const data = arrayBufferToBase64(buff);
+            const profileObj = {
+                fileAuthor : response.file.fileAuthor,
+                fileData : data,
+                fileName : response.file.fileName,
+                fileType : response.file.fileType,
+                idfile : response.file.idfile
+            };
+        setProfilePic(profileObj);
+        profilePicUpdate(response.file.fileType, data);
+        }
 }
     const picClickHandler = async (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('image', file);
         const send = await sendImg(formData);
+        send ? setErrorMess(send) : <></>;
         getProfilePic();
         setImgStyle("user__photo");
         setCtaStyle("cta")
@@ -166,9 +172,10 @@ const DashboardPage = (props) => {
                 </div>
                 <form action="" method="post" encType="multipart/formdata">
                     <label htmlFor="profile__pic" className="cta cta__file-upload">Choisir une photo</label>
-                    <input className='disabled' type="file" name="profile__pic" id="profile__pic" onChange={sendPic}/>
+                    <input className='disabled' type="file" accept="image/png, image/jpg, image/jpeg" name="profile__pic" id="profile__pic" onChange={sendPic}/>
                     <button className={ctaStyle} onClick={picClickHandler}>valider</button>
                 </form>
+                <p className="profile__err">{errorMess}</p>
             </div>
         </div>
     )

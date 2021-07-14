@@ -11,10 +11,8 @@ const sendImg = async (file) => {
      const response = await fetch('http://localhost:3000/uploads', postOpt);
      if(!response){
          console.error('no response to your get req :(');
-     }
-     const data = await response.text();
-     if(!data){
-         console.error('no data recieved');
+     }else if(!response.ok){
+         return 'veuillez choisir un fichier pesant moins d\'1mo au format .jpeg ou .png';
      }
  };
 

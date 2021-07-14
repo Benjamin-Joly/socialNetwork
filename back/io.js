@@ -1,6 +1,7 @@
 const server = require('./http');
 const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
+const multer = require('multer')
 
 const db = mysql.createConnection({
   user:process.env.DBUSER,
@@ -133,8 +134,11 @@ io.on('connection', (socket) => {
     const userId = image.author;
     db.query(`UPDATE messages SET profilePicData = "${imageData}" WHERE messageAuthor = ${userId}`,
         (error, result) => {
-            if(error){socket.send(error)};
-            if(result){console.log('updated')}
+          console.log('test result handling', result);
+            if(error){
+              console.log('test error handling', error, result);
+              socket.send(error);
+            };
         });
     db.query(`SELECT * FROM messages ORDER BY messageId DESC`, 
     (error, result) => {

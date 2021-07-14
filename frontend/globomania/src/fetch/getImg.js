@@ -9,7 +9,12 @@ const getImg = async () => {
      }
      const response = await fetch('http://localhost:3000/uploads', getOpt);
      const data = await response.json();
-     return data;
+     if(data){
+         return data
+     }
+     else{
+         console.log('no picture');
+     }
  };
 
  export default getImg;
