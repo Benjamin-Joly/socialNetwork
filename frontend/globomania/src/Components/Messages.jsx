@@ -73,7 +73,7 @@ const Messages = ({ content, history }) => {
                 {messages.map((message) => (
                     <div key={message.messageId} id={message.messageId} className={mineOrTheirs(message)}>
                         <div className="message__author-wrap">
-                        <img src={message.profilePicData ? `${message.profilePicData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="message__author-img" />
+                        <img src={message.profilePicData !== 'data:;base64,' ? `${message.profilePicData}` : 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Amerikanische_Pekingenten_2013_01%2C_cropped.jpg'} alt="Profile picture" className="message__author-img" />
                         <p className="message__author">{message.messageAuthorName}</p>
                     </div>
                         <p className="message__body">{message.messageBody}</p>
